@@ -6,7 +6,9 @@ setup(name='botty_mcbotface',
       url='tbd',
       author='Danny Hinshaw',
       author_email='danny@nulleffort.com',
-      # install_requires=[],
+      install_requires=[
+          'slackbot'
+      ],
       license='MIT',
       packages=['botty_mcbotface'],
       zip_safe=False)
