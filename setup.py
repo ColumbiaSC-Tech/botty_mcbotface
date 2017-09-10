@@ -7,6 +7,9 @@ setup(name='botty_mcbotface',
       author='Danny Hinshaw',
       author_email='danny@nulleffort.com',
       install_requires=[
+          'bs4',
+          'lxml',
+          'requests',
           'slackbot'
       ],
       license='MIT',
