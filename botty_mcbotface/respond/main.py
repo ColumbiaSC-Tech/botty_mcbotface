@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-from slackbot.bot import listen_to, respond_to, re
+from slackbot.bot import respond_to, re
+from ..tools import random_response
 
 
 @respond_to('^(arise|wake)', re.IGNORECASE)
 def arise(message, command):
     # message.react('+1')
     responses = [
-        '_Up from the 36 chamber!!!!_',
+        '_Up from the 36 chambers!!!!_',
+        '_rubs eyes_\n ...huh?',
         ':fire::fire::fire:ᕦ໒( ᴼ 益 ᴼ )७ᕤ:fire::fire::fire:'
     ]
-    return message.send(responses[1])
+    return message.send(random_response(responses))
 
 
 @respond_to('^help', re.IGNORECASE)
