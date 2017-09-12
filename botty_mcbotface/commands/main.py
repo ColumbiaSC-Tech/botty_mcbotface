@@ -25,6 +25,21 @@ def google(message, search):
     return message.send(unquote(link))
 
 
+@listen_to('^.y (.*)', re.IGNORECASE)
+def youtube(message, search):
+    """
+    Performs a youtube search and returns 1st result
+    :param message: Slackbot message object
+    :param search: User search string
+    :return: Message to slack channel
+    """
+    search_url = 'https://www.youtube.com/results?search_query=' + search
+    res = (a['href'] for a in get_html(search_url).select('a.yt-uix-sessionlink') if a['href'].startswith('/watch?v='))
+    link = 'https://www.youtube.com' + res.next()
+
+    return message.send(unquote(link))
+
+
 @listen_to('^.w (\d{5})', re.IGNORECASE)
 def weather(message, zip_code):
     """
