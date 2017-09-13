@@ -3,7 +3,6 @@ certifi==2017.7.27.1
 chardet==3.0.4
 idna==2.6
 lxml==3.8.0
-quantumrandom==1.9.0
 requests==2.18.4
 six==1.10.0
 slackbot==0.5.1

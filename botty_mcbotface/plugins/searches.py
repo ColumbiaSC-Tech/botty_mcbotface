@@ -35,8 +35,8 @@ def youtube(message, search):
 
     # YouTube html is funky when using HTTP request. Have to wrangle it a little to get the video links
     res = (a['href'] for a in get_html(search_url).select('a.yt-uix-sessionlink') if a['href'].startswith('/watch?v='))
-    link = 'https://www.youtube.com' + res.next()
-
+    link = 'https://www.youtube.com' + next(res)
+    # print(get_html(search_url).select('a.yt-uix-sessionlink'))
     return message.send(unquote(link))
 
 

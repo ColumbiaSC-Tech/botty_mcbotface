@@ -46,7 +46,19 @@ replacements = {'a': 'ɐ',
 # append an inverted form of replacements to itself, so flipping works both ways
 replacements.update(dict((v, k) for k, v in replacements.items()))
 
-flippers = ["( ﾉ⊙︵⊙）ﾉ", "(╯°□°）╯", "( ﾉ♉︵♉ ）ﾉ"]
+flippers = ["( ﾉ⊙︵⊙）ﾉ",
+            "(╯°□°）╯",
+            "( ﾉ♉︵♉ ）ﾉ",
+            "(ﾉ ಠдಠ )ﾉ",
+            "༼ノ◕ヮ◕༽ノ",
+            "(╯=▃=)╯",
+            "(ノ°▽°)ノ",
+            "(╯ಠ‿ಠ)╯",
+            "ʕ ⊃･ ◡ ･ ʔ⊃",
+            "(╯ຈل͜ຈ) ╯",
+            "(╯ ͝° ͜ʖ͡°)╯",
+            "(つ☢益☢)つ",
+            "(ﾉ＾◡＾)ﾉ"]
 table_flipper = "┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻"
 
 
@@ -97,6 +109,6 @@ def fix(message, text):
             table_status[chan] = False
             return message.send("┬─┬ノ(ಠ_ಠノ)")
         else:
-            return message.send("no tables have been turned over in this channel, thanks for checking!")
+            return message.send("no tables are currently turned over in this channel. Chill, yo.")
     else:
         return message.send(flip(message, text))
