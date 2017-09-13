@@ -1,6 +1,5 @@
 from six.moves.urllib.parse import unquote
 from slackbot.bot import listen_to, re
-
 from botty_mcbotface.utils.tools import get_html
 
 

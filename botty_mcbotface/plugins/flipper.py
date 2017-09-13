@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import random
-
 from collections import defaultdict
+from slackbot.bot import listen_to, re
+from botty_mcbotface.utils import formatting
 
 table_status = defaultdict(lambda: None)
-USE_FLIPPERS = True
 
 replacements = {'a': 'ɐ',
                 'b': 'q',
@@ -50,40 +50,53 @@ flippers = ["( ﾉ⊙︵⊙）ﾉ", "(╯°□°）╯", "( ﾉ♉︵♉ ）ﾉ"
 table_flipper = "┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻"
 
 
-def flip(text, reply, message, chan):
-    """<text> -- Flips <text> over."""
+@listen_to(r'^.flip (.*)', re.IGNORECASE)
+def flip(message, text):
+    """
+    <text> -- Flips <text> over.
+    :param message: Slackbot message object
+    :param text: Text to flip
+    :return: Message to slack channel
+    """
     global table_status
-    #table_status = defaultdict(False)
-    
-    if USE_FLIPPERS:
-        if text in ['table','tables']:
-             message(random.choice([random.choice(flippers) + " ︵ " + "\u253B\u2501\u253B", table_flipper]))
-             table_status[chan] = True
-        elif text == "5318008":
-             out = "BOOBIES"
-             message(random.choice(flippers) + " ︵ " + out)
-        elif text == "BOOBIES":
-             out = "5318008"
-             message(random.choice(flippers) + " ︵ " + out)
-        else:
-             message(random.choice(flippers) + " ︵ " + formatting.multi_replace(text[::-1], replacements))
+    chan = message._body['channel']
+
+    if text in ['table', 'tables']:
+        table_status[chan] = True
+        return message.send(random.choice([random.choice(flippers) + " ︵ " + "┻━┻", table_flipper]))
+    elif text == "5318008":
+        out = "BOOBIES"
+        return message.send(random.choice(flippers) + " ︵ " + out)
+    elif text == "BOOBIES":
+        out = "5318008"
+        return message.send(random.choice(flippers) + " ︵ " + out)
     else:
-        reply(formatting.multi_replace(text[::-1], replacements))
+        return message.send(random.choice(flippers) + " ︵ " + formatting.multi_replace(text[::-1], replacements))
 
 
-def table(text, message):
-    """<text> -- (╯°□°）╯︵ <ʇxǝʇ>"""
-    message(random.choice(flippers) + " ︵ " + formatting.multi_replace(text[::-1].lower(), replacements))
+@listen_to(r'^.table (.*)', re.IGNORECASE)
+def table(message, text):
+    """
+    <text> -- (╯°□°）╯︵ <ʇxǝʇ>
+    For lowercase flips
+    :param message: Slackbot message object
+    :param text: Text to flip
+    :return: Message to slack channel
+    """
+    return message.send(random.choice(flippers) + " ︵ " + formatting.multi_replace(text[::-1].lower(), replacements))
 
 
-def fix(text, reply, message, chan):
+@listen_to(r'^.fix (.*)', re.IGNORECASE)
+def fix(message, text):
     """fixes a flipped over table. ┬─┬ノ(ಠ_ಠノ)"""
     global table_status
+    chan = message._body['channel']
+
     if text in ['table', 'tables']:
         if table_status[chan]:
-            message("┬─┬ノ(ಠ_ಠノ)")
             table_status[chan] = False
+            return message.send("┬─┬ノ(ಠ_ಠノ)")
         else:
-            message("no tables have been turned over in {}, thanks for checking!".format(chan))
+            return message.send("no tables have been turned over in this channel, thanks for checking!")
     else:
-        message(flip(text,reply,message,chan))
+        return message.send(flip(message, text))
