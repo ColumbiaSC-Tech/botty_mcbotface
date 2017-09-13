@@ -1,4 +1,4 @@
-from ..main import get_html
+from botty_mcbotface.utils.tools import get_html
 
 
 def weather_setup(zip_code):
