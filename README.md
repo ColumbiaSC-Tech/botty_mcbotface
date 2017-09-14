@@ -48,7 +48,7 @@ is technically a plugin for (though he himself has a multitude of plugins as wel
         main()
     ```
 
-4. Run `pip install botty_mcbotface`
+4. Run `pip install botty-mcbotface`
 
 5. Run `python run.py`:
 
