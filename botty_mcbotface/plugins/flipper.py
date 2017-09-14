@@ -69,9 +69,6 @@ replacements = {'a': 'ɐ',
                 '\'': ',',
                 '_': '‾'}
 
-# append an inverted form of replacements to itself, so flipping works both ways
-replacements.update(dict((v, k) for k, v in replacements.items()))
-
 flippers = ["( ﾉ⊙︵⊙）ﾉ",
             "(╯°□°）╯",
             "( ﾉ♉︵♉ ）ﾉ",
@@ -85,7 +82,11 @@ flippers = ["( ﾉ⊙︵⊙）ﾉ",
             "(╯ ͝° ͜ʖ͡°)╯",
             "(つ☢益☢)つ",
             "(ﾉ＾◡＾)ﾉ"]
+
 table_flipper = "┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻"
+
+# append an inverted form of replacements to itself, so flipping works both ways
+replacements.update(dict((v, k) for k, v in replacements.items()))
 
 
 @listen_to(r'^.flip (.*)', re.IGNORECASE)
