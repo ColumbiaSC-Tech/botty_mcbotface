@@ -16,7 +16,7 @@ Currently this readme is more of a *plan* than reality. However, V1.0 should be 
 
 1. Setup [slackbot](https://github.com/lins05/slackbot)
 2. `pip install botty_mcbotface`
-3. In slackbot_settings.py:
+3. In `slackbot_settings.py`:
     * Add `botty_mcbotface.plugins` to PLUGINS list
     * Configure Python Variables in slackbot_settings.py
 
