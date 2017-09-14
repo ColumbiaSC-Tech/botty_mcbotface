@@ -13,7 +13,6 @@ setup(name='botty_mcbotface',
           #   5 - Production/Stable
           'Development Status :: 3 - Alpha',
           'Intended Audience :: Developers',
-          'Slack :: Bots :: SlackBot',
           'License :: OSI Approved :: MIT License',
           'Programming Language :: Python :: 3.5',
       ],
