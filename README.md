@@ -18,6 +18,7 @@ Currently this readme is more of a *plan* than reality. However, V1.0 should be 
 *For more info on the setup for slackbot (number 2 & 3 below) you can read up [here](https://github.com/lins05/slackbot)*
 
 1. Start a virtualenv in whatever directory you want to run botty, then cd into it and follow the instructions
+
 2. In your new project directory, create a `slackbot_settings.py`:
     ```
     API_TOKEN = 'your bot API token here'
