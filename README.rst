@@ -1,3 +1,11 @@
+.. raw:: html
+
+   <!--For conversion to rst run the command below from project root-->
+
+.. raw:: html
+
+   <!--pandoc --from=markdown --to=rst README.md -o README.rst-->
+
 Setup
 =====
 
@@ -9,21 +17,58 @@ a general purpose Slack bot. Although botty\_mcbotface is not sentient,
 it does display a little sense of humor.
 
 Much inspiration drawn from snoonet's
-`gonzobot <https://github.com/snoonetIRC/CloudBot>`__ for IRC.
-
-**Note on Contributing:** At this point in time no PR's will be accepted
-until after V1.0 release. Currently this readme is more of a *plan* than
-reality. However, V1.0 should be ready very soon.
+`gonzobot <https://github.com/snoonetIRC/CloudBot>`__ for IRC. The main
+build is from lins05's
+`slackbot <https://github.com/lins05/slackbot>`__, which
+botty\_mcbotface is technically a plugin for (though he himself has a
+multitude of plugins as well).
 
 Installation
 ------------
 
-1. Setup `slackbot <https://github.com/lins05/slackbot>`__
-2. ``pip install botty_mcbotface``
-3. In slackbot\_settings.py:
+*For more info on the setup for slackbot (number 2 & 3 below) you can
+read up `here <https://github.com/lins05/slackbot>`__*
 
-   -  Add ``botty_mcbotface.plugins`` to PLUGINS list
-   -  Configure Python Variables in slackbot\_settings.py
+1. Start a virtualenv in whatever directory you want to run botty, then
+   cd into it and follow the instructions
+
+2. In your new project directory, create a ``slackbot_settings.py``:
+
+   ::
+
+       API_TOKEN = 'your bot API token here'
+
+       # Default bot reply when pinged but has no command registered to respond with
+       DEFAULT_REPLY = "Sorry but I didn't understand you"
+
+       # User to send errors to in DM
+       ERRORS_TO = 'danny'
+
+       # Include all plugins like below, otherwise you can specify with multiple list items
+       PLUGINS = [
+           'botty_mcbotface.plugins'
+       ]
+
+3. Create a ``run.py`` file, this is the main entry point:
+
+   ::
+
+       #!/usr/bin/env python
+       from slackbot.bot import Bot
+       import logging
+       logging.basicConfig()
+
+
+       def main():
+           bot = Bot()
+           bot.run()
+
+       if __name__ == "__main__":
+           main()
+
+4. Run ``pip install botty_mcbotface``
+
+5. Run ``python run.py``:
 
 Contributors
 ------------

@@ -11,9 +11,6 @@ Much inspiration drawn from snoonet's [gonzobot](https://github.com/snoonetIRC/C
 The main build is from lins05's [slackbot](https://github.com/lins05/slackbot), which botty_mcbotface
 is technically a plugin for (though he himself has a multitude of plugins as well).
 
-**Note on Contributing:** At this point in time no PR's will be accepted until after V1.0 release.
-Currently this readme is more of a *plan* than reality. However, V1.0 should be ready very soon.
-
 ## Installation
 *For more info on the setup for slackbot (number 2 & 3 below) you can read up [here](https://github.com/lins05/slackbot)*
 
