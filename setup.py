@@ -25,6 +25,7 @@ setup(name='botty_mcbotface',
       ],
       install_requires=[
           'bs4',
+          'feedparser'
           'lxml',
           'requests',
           'slackbot'
