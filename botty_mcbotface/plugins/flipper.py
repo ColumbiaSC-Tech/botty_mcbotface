@@ -113,18 +113,6 @@ def flip(message, text):
         return message.send(random.choice(flippers) + " ︵ " + formatting.multi_replace(text[::-1], replacements))
 
 
-@listen_to(r'^\.table (.*)', re.IGNORECASE)
-def table(message, text):
-    """
-    <text> -- (╯°□°）╯︵ <ʇxǝʇ>
-    For lowercase flips
-    :param message: Slackbot message object
-    :param text: Text to flip
-    :return: Message to slack channel
-    """
-    return message.send(random.choice(flippers) + " ︵ " + formatting.multi_replace(text[::-1].lower(), replacements))
-
-
 @listen_to(r'^\.fix (.*)', re.IGNORECASE)
 def fix(message, text):
     """fixes a flipped over table. ┬─┬ノ(ಠ_ಠノ)"""
