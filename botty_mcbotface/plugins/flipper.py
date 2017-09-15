@@ -89,7 +89,7 @@ table_flipper = "┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻"
 replacements.update(dict((v, k) for k, v in replacements.items()))
 
 
-@listen_to(r'^.flip (.*)', re.IGNORECASE)
+@listen_to(r'^\.flip (.*)', re.IGNORECASE)
 def flip(message, text):
     """
     <text> -- Flips <text> over.
@@ -113,7 +113,7 @@ def flip(message, text):
         return message.send(random.choice(flippers) + " ︵ " + formatting.multi_replace(text[::-1], replacements))
 
 
-@listen_to(r'^.table (.*)', re.IGNORECASE)
+@listen_to(r'^\.table (.*)', re.IGNORECASE)
 def table(message, text):
     """
     <text> -- (╯°□°）╯︵ <ʇxǝʇ>
@@ -125,7 +125,7 @@ def table(message, text):
     return message.send(random.choice(flippers) + " ︵ " + formatting.multi_replace(text[::-1].lower(), replacements))
 
 
-@listen_to(r'^.fix (.*)', re.IGNORECASE)
+@listen_to(r'^\.fix (.*)', re.IGNORECASE)
 def fix(message, text):
     """fixes a flipped over table. ┬─┬ノ(ಠ_ಠノ)"""
     global table_status

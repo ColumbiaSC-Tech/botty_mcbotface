@@ -1,9 +1,15 @@
 #!/usr/bin/env python
 from setuptools import setup
 
+
+def readme():
+    with open('README.rst') as f:
+        return f.read()
+
 setup(name='botty_mcbotface',
       version='1.0.3',
       description='General purpose Slack-bot with personality',
+      long_description=readme(),
       url='https://github.com/ColumbiaSC-Tech/botty_mcbotface',
       author='Danny Hinshaw',
       author_email='danny@nulleffort.com',
