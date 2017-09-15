@@ -1,5 +1,3 @@
-<!--For conversion to rst run the command below from project root-->
-<!--pandoc --from=markdown --to=rst README.md -o README.rst-->
 # Setup
 
 ## Overview
