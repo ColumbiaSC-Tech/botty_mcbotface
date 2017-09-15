@@ -2,7 +2,7 @@
 from setuptools import setup
 
 setup(name='botty_mcbotface',
-      version='1.0.1',
+      version='1.0.3',
       description='General purpose Slack-bot with personality',
       url='https://github.com/ColumbiaSC-Tech/botty_mcbotface',
       author='Danny Hinshaw',
@@ -24,7 +24,10 @@ setup(name='botty_mcbotface',
       ],
       keywords='slack bot slackbot',
       license='MIT',
-      packages=['botty_mcbotface'],
+      packages=['botty_mcbotface',
+                'botty_mcbotface.data',
+                'botty_mcbotface.plugins',
+                'botty_mcbotface.utils'],
       package_data={
           '': ['*.json', '*.rst', '*.txt'],
       },
