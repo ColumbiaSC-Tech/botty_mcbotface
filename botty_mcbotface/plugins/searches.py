@@ -3,7 +3,7 @@ from slackbot.bot import listen_to, re
 from botty_mcbotface.utils.tools import get_html
 
 
-@listen_to('^.g (.*)', re.IGNORECASE)
+@listen_to('^\.g (.*)', re.IGNORECASE)
 def google(message, search):
     """
     Performs a google search and returns the href of 1st result
@@ -23,7 +23,7 @@ def google(message, search):
     return message.send(unquote(link))
 
 
-@listen_to('^.y (.*)', re.IGNORECASE)
+@listen_to('^\.y (.*)', re.IGNORECASE)
 def youtube(message, search):
     """
     Performs a youtube search and returns 1st result

@@ -30,6 +30,6 @@ responses = [
             'Very doubtful']
 
 
-@listen_to(r'^\.8ball|\.8|\.eightball (.*)', re.IGNORECASE)
+@listen_to(r'^\.8ball |^\.8 |^\.eightball (.*)', re.IGNORECASE)
 def eightball(message, _):
     return message.reply(random_response(responses))

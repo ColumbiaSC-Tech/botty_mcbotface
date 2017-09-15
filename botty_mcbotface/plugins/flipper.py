@@ -4,6 +4,7 @@ import random
 from collections import defaultdict
 from slackbot.bot import listen_to, re
 from botty_mcbotface.utils import formatting
+from botty_mcbotface.utils.tools import get_user_name_by_id
 
 table_status = defaultdict(lambda: None)
 
@@ -64,6 +65,7 @@ replacements = {'a': 'ɐ',
                 ',': '\'',
                 '(': ')',
                 '<': '>',
+                '^': 'v',
                 '[': ']',
                 '{': '}',
                 '\'': ',',
@@ -89,7 +91,7 @@ table_flipper = "┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻"
 replacements.update(dict((v, k) for k, v in replacements.items()))
 
 
-@listen_to(r'^.flip (.*)', re.IGNORECASE)
+@listen_to('^\.flip (.*)', re.IGNORECASE)
 def flip(message, text):
     """
     <text> -- Flips <text> over.
@@ -110,22 +112,25 @@ def flip(message, text):
         out = "5318008"
         return message.send(random.choice(flippers) + " ︵ " + out)
     else:
+        if re.search('<@[A-Z0-9]*>', text):
+
+            # When receiving text that is a tagged username, 'text' comes in as the ID(ie '@bot' == '<@43E6DG2>')
+            # We switch out the id, check the slack API for the username associated with it and return that instead
+            start, second = text.split('<@')
+            user_id, end = second.split('>')
+
+            # Query the Slack API
+            res = get_user_name_by_id(user_id).json()
+
+            # Piece it all back together
+            user_name = '@' + res['user']['name']
+            full = start + user_name + end
+            return message.send(random.choice(flippers) + " ︵ " + formatting.multi_replace(full[::-1], replacements))
+
         return message.send(random.choice(flippers) + " ︵ " + formatting.multi_replace(text[::-1], replacements))
 
 
-@listen_to(r'^.table (.*)', re.IGNORECASE)
-def table(message, text):
-    """
-    <text> -- (╯°□°）╯︵ <ʇxǝʇ>
-    For lowercase flips
-    :param message: Slackbot message object
-    :param text: Text to flip
-    :return: Message to slack channel
-    """
-    return message.send(random.choice(flippers) + " ︵ " + formatting.multi_replace(text[::-1].lower(), replacements))
-
-
-@listen_to(r'^.fix (.*)', re.IGNORECASE)
+@listen_to('^\.fix (.*)', re.IGNORECASE)
 def fix(message, text):
     """fixes a flipped over table. ┬─┬ノ(ಠ_ಠノ)"""
     global table_status
