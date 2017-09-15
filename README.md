@@ -57,6 +57,8 @@ is technically a plugin for (though he himself has a multitude of plugins as wel
 
 [Danny Hinshaw](https://github.com/DannyHinshaw)
 
+[Benjamin Matthews](https://github.com/bmatt468)
+
 ## License
 
 The MIT License (see [LICENSE](LICENSE))
