@@ -1,6 +1,7 @@
 from random import choice
 from requests import request
 from bs4 import BeautifulSoup
+from slackbot_settings import API_TOKEN
 
 
 def soup(html):
@@ -30,3 +31,8 @@ def random_response(responses):
     :return: A random response string
     """
     return choice(responses)
+
+
+def get_user_name_by_id(user_id):
+    payload = {'token': API_TOKEN, 'user': user_id}
+    return request('get', 'https://slack.com/api/users.info', params=payload)
