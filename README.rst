@@ -74,6 +74,7 @@ Contributors
 ------------
 
 `Danny Hinshaw <https://github.com/DannyHinshaw>`__
+`Benjamin Matthews <https://github.com/bmatt468>`__
 
 License
 -------
