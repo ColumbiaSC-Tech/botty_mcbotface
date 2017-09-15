@@ -14,7 +14,8 @@ is technically a plugin for (though he himself has a multitude of plugins as wel
 ## Installation
 *For more info on the setup for slackbot (number 2 & 3 below) you can read up [here](https://github.com/lins05/slackbot)*
 
-1. Start a virtualenv in whatever directory you want to run botty, then cd into it and follow the instructions
+1. Start a virtualenv in whatever directory you want to run botty,
+    then cd into the project root and follow the remaining instructions
 
 2. In your new project directory, create a `slackbot_settings.py`:
     ```

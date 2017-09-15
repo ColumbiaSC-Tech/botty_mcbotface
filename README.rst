@@ -30,7 +30,7 @@ Installation
 read up `here <https://github.com/lins05/slackbot>`__*
 
 1. Start a virtualenv in whatever directory you want to run botty, then
-   cd into it and follow the instructions
+   cd into the project root and follow the remaining instructions
 
 2. In your new project directory, create a ``slackbot_settings.py``:
 
