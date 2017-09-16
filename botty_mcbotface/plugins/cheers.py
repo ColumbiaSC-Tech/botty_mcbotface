@@ -14,7 +14,7 @@ def cheers(message):
         "FUCK YEAH!",
         "CHEEEEEEEEAAAAA BOIIIIIIIII!!!!",
         "DOGGIE DOGGIE WHAT NOW?!",
-        "♪  ┏(°.°)┛ GET DOWN ┗(°.°)┓ ♬"
+        "♪  ┏(°.°)┛ GET DOWN ┗(°.°)┓ ♬",
         "GAME ON BITCHEZZZ!!",
         "GET SOME!!",
         "HOORAH!",
