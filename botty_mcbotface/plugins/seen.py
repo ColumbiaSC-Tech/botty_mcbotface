@@ -1,6 +1,6 @@
 from datetime import datetime
 from slackbot.bot import listen_to, re
-from botty_mcbotface.utils.tools import get_user_name_by_id, get_user_presence
+from botty_mcbotface.utils.api import get_user_name_by_id, get_user_presence
 
 
 @listen_to('^\.seen (.*)', re.IGNORECASE)
