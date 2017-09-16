@@ -12,9 +12,15 @@ def cheers(message):
     """
     _cheers = [
         "FUCK YEAH!",
+        "CHEEEEEEEEAAAAA BOIIIIIIIII!!!!",
+        "DOGGIE DOGGIE WHAT NOW?!",
+        "♪  ┏(°.°)┛ GET DOWN ┗(°.°)┓ ♬"
+        "GAME ON BITCHEZZZ!!",
+        "GET SOME!!",
         "HOORAH!",
         "HURRAY!",
         "OORAH!",
+        "OOHHHYEEEEEEEEEEEAH!",
         "YAY!",
         "*\o/* CHEERS! *\o/*",
         "HOOHAH!",

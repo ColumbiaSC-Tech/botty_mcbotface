@@ -1,7 +1,9 @@
 # Test Env
 botty_testing
 run.py
+run_test.py
 slackbot_settings.py
+slackbot_test_settings.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

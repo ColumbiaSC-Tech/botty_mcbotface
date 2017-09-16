@@ -87,7 +87,7 @@ flippers = ["( ﾉ⊙︵⊙）ﾉ",
 
 table_flipper = "┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻"
 
-# append an inverted form of replacements to itself, so flipping works both ways
+# Append an inverted form of replacements to itself, so flipping works both ways
 replacements.update(dict((v, k) for k, v in replacements.items()))
 
 
@@ -112,20 +112,26 @@ def flip(message, text):
         out = "5318008"
         return message.send(random.choice(flippers) + " ︵ " + out)
     else:
-        if re.search('<@[A-Z0-9]*>', text):
+        # When receiving text that is a tagged username, 'text' comes in as the ID(ie '@bot' == '<@43E6DG2>')
+        # We switch out the id, check the slack API for the username associated with it and return that instead
 
-            # When receiving text that is a tagged username, 'text' comes in as the ID(ie '@bot' == '<@43E6DG2>')
-            # We switch out the id, check the slack API for the username associated with it and return that instead
-            start, second = text.split('<@')
-            user_id, end = second.split('>')
+        # Regex pattern to detect name-tags/user-ids
+        re_user = re.compile('<@[A-Z0-9]*>')
 
-            # Query the Slack API
-            res = get_user_name_by_id(user_id).json()
+        if re.search(re_user, text):
+            matches = re.findall(re_user, text)
 
-            # Piece it all back together
-            user_name = '@' + res['user']['name']
-            full = start + user_name + end
-            return message.send(random.choice(flippers) + " ︵ " + formatting.multi_replace(full[::-1], replacements))
+            for match in matches:
+                # Extract the id from surrounding chars
+                start, second = match.split('<@')
+                user_id, end = second.split('>')
+
+                # Query the Slack API
+                # Piece it all back together
+                user_name = '@' + get_user_name_by_id(user_id)
+                text = re.sub(match, user_name, text)
+
+            return message.send(random.choice(flippers) + " ︵ " + formatting.multi_replace(text[::-1], replacements))
 
         return message.send(random.choice(flippers) + " ︵ " + formatting.multi_replace(text[::-1], replacements))
 
@@ -137,10 +143,11 @@ def fix(message, text):
     chan = message._body['channel']
 
     if text in ['table', 'tables']:
+
         if table_status[chan]:
             table_status[chan] = False
             return message.send("┬─┬ノ(ಠ_ಠノ)")
-        else:
-            return message.send("no tables are currently turned over in this channel. Chill, yo.")
-    else:
-        return message.send(flip(message, text))
+
+        return message.send("no tables are currently turned over in this channel. Chill, yo.")
+
+    return message.send(flip(message, text))

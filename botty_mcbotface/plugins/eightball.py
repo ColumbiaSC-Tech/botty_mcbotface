@@ -11,6 +11,7 @@ responses = [
             'One would be wise to think so',
             'Naturally',
             'Without a doubt',
+            'lol no',
             'Yes',
             'Yes, definitely',
             'You may rely on it',
