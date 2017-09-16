@@ -21,8 +21,8 @@ Please see the matching documentation at the botty_mcbotface `GitHub repo <https
 
 Contributors
 ************
+
 `Danny Hinshaw <https://github.com/DannyHinshaw>`__
-`Benjamin Matthews <https://github.com/bmatt468>`__
 
 `Benjamin Matthews <https://github.com/bmatt468>`__
 
