@@ -1,10 +1,12 @@
-from pprint import pprint
-from slackbot_settings import API_TOKEN
 from slacker import Slacker
+from slackbot_settings import USER_TOKEN
 
-client = Slacker(API_TOKEN)
+# Bot API Tokens have certain limitations
+# to get around that we can use the user_token
+client = Slacker(USER_TOKEN)
 
 # *** Slacker API Methods *** #
+
 
 def get_user_name_by_id(user_id):
     """
@@ -15,10 +17,10 @@ def get_user_name_by_id(user_id):
     return client.users.info(user_id).body['user']['name']
 
 
-def get_user_presence(user_id):
+def get_user_message_history(user_name):
     """
     Returns dict of 'presence' attributes (activity, name etc.)
-    :param user_id:
+    :param user_name:
     :return:
     """
-    return client.users.get_presence(user_id).body
+    return client.search.messages('from:' + user_name, count=1, page=1).body
