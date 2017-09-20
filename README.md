@@ -18,6 +18,7 @@ is technically a plugin for (though he himself has a multitude of plugins as wel
 2. In your new project directory, create a `slackbot_settings.py`:
     ```
     API_TOKEN = 'your bot API token here'
+    USER_TOKEN = 'your user API token here'
 
     # Default bot reply when pinged but has no command registered to respond with
     DEFAULT_REPLY = "Sorry but I didn't understand you"

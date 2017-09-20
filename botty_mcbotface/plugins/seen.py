@@ -1,6 +1,6 @@
 from datetime import datetime
 from slackbot.bot import listen_to, re
-from botty_mcbotface.utils.api import get_user_name_by_id, get_user_presence
+from botty_mcbotface.utils.user_api import get_user_name_by_id, get_user_message_history
 
 
 @listen_to('^\.seen (.*)', re.IGNORECASE)
@@ -14,14 +14,15 @@ def seen(message, text):
     start, second = text.split('<@')
     user_id = second.split('>')[0]
 
-    presence = get_user_presence(user_id)
+    messages = get_user_message_history(user_id)
     user_name = get_user_name_by_id(user_id)
 
-    msg = 'Fix me... pleeaseee'
+    for msg in messages['messages']['matches']:
+        if msg.keys() & {'text', 'ts'}:
+            ch = msg['channel']['name']
+            ts = datetime.fromtimestamp(float(msg['ts']))
+            txt = msg['text']
+            m = '@{} was last seen *{}*, in #{} saying:\n> {}'.format(user_name, ts, ch, txt)
+            return message.send(m)
 
-    # TODO: Need a better way to check last seen. Sometimes 'last_activity' is not present in return data
-    if 'last_activity' in presence:
-        last_seen = datetime.fromtimestamp(int(presence['last_activity'])).strftime('%Y-%m-%d %H:%M:%S')
-        msg = user_name + ' was last seen on ' + last_seen
-
-    return message.send(msg)
+    return message.send('Yea... I can\'t go that far back in time...')

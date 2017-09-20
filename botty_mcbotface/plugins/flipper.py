@@ -4,7 +4,7 @@ import random
 from collections import defaultdict
 from slackbot.bot import listen_to, re
 from botty_mcbotface.utils import formatting
-from botty_mcbotface.utils.api import get_user_name_by_id
+from botty_mcbotface.utils.user_api import get_user_name_by_id
 
 table_status = defaultdict(lambda: None)
 
