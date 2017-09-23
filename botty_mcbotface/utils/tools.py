@@ -1,6 +1,7 @@
 from random import choice
 from requests import request
 from bs4 import BeautifulSoup
+import collections
 
 
 # *** General Methods *** #
@@ -31,6 +32,17 @@ def random_response(responses):
     :param responses: List of response strings
     :return: A random response string
     """
-    return choice(responses)
+    def test_1d(res):
+
+        if isinstance(res, list):
+            val = True if True not in [isinstance(r, (list or tuple)) for r in res] else False
+            return val
+
+        return False
+
+    if test_1d(responses):
+        return choice(responses)
+
+    raise TypeError
 
 
