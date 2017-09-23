@@ -22,6 +22,7 @@ def get_html(url):
     :param url: URL to get HTML from
     :return: HTML string
     """
+    # FIXME: Figure out the 'white people' URL response
     res = request('get', url)
     return soup(res.text)
 

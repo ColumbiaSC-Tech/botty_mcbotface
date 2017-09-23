@@ -4,6 +4,7 @@ import random
 from collections import defaultdict
 from slackbot.bot import listen_to, re
 from botty_mcbotface.utils import formatting
+from botty_mcbotface.utils.tools import random_response
 from botty_mcbotface.utils.user_api import get_user_name_by_id
 
 table_status = defaultdict(lambda: None)
@@ -85,6 +86,12 @@ flippers = ["( ﾉ⊙︵⊙）ﾉ",
             "(つ☢益☢)つ",
             "(ﾉ＾◡＾)ﾉ"]
 
+fix_responses = ['Yea... I\'m not fixing that...',
+                 '-___-',
+                 'Staaaaaaahp',
+                 'I CAN ONLY FIX TABLES OKAY?!',
+                 'That\'s not a table!']
+
 table_flipper = "┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻"
 
 # Append an inverted form of replacements to itself, so flipping works both ways
@@ -101,16 +108,17 @@ def flip(message, text):
     """
     global table_status
     chan = message._body['channel']
+    re_table = re.compile('tables?$')
 
-    if text in ['table', 'tables']:
+    if re.match(re_table, text.strip()):
         table_status[chan] = True
-        return message.send(random.choice([random.choice(flippers) + " ︵ " + "┻━┻", table_flipper]))
+        return message.send(random_response([random.choice(flippers) + " ︵ " + "┻━┻", table_flipper]))
     elif text == "5318008":
         out = "BOOBIES"
-        return message.send(random.choice(flippers) + " ︵ " + out)
+        return message.send(random_response(flippers) + " ︵ " + out)
     elif text == "BOOBIES":
         out = "5318008"
-        return message.send(random.choice(flippers) + " ︵ " + out)
+        return message.send(random_response(flippers) + " ︵ " + out)
     else:
         # When receiving text that is a tagged username, 'text' comes in as the ID(ie '@bot' == '<@43E6DG2>')
         # We switch out the id, check the slack API for the username associated with it and return that instead
@@ -131,9 +139,9 @@ def flip(message, text):
                 user_name = '@' + get_user_name_by_id(user_id)
                 text = re.sub(match, user_name, text)
 
-            return message.send(random.choice(flippers) + " ︵ " + formatting.multi_replace(text[::-1], replacements))
+            return message.send(random_response(flippers) + " ︵ " + formatting.multi_replace(text[::-1], replacements))
 
-        return message.send(random.choice(flippers) + " ︵ " + formatting.multi_replace(text[::-1], replacements))
+        return message.send(random_response(flippers) + " ︵ " + formatting.multi_replace(text[::-1], replacements))
 
 
 @listen_to('^\.fix (.*)', re.IGNORECASE)
@@ -148,6 +156,8 @@ def fix(message, text):
             table_status[chan] = False
             return message.send("┬─┬ノ(ಠ_ಠノ)")
 
-        return message.send("no tables are currently turned over in this channel. Chill, yo.")
+        return message.send("No tables are currently turned over in this channel. Chill, yo.")
 
-    return message.send(flip(message, text))
+    # TODO: PR the slackbot repo for chaining methods (ie. return 'self')
+    message.react('poop')
+    return message.send(random_response(fix_responses))
