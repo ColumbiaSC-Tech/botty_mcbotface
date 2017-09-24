@@ -6,7 +6,7 @@ import re
 # to get around that we can use the user_token
 client = Slacker(USER_TOKEN)
 
-# Regular expressions for sanitizing slack input strings
+# Regular expressions for sanitizing Slack formatted input strings
 re_chan = re.compile(r'<#[A-Z0-9]*\|[^>]*>')
 re_link = re.compile(r'<https?://[^|]*\|[^>]*>')
 re_user = re.compile(r'<@[A-Z0-9]*>')
@@ -90,24 +90,17 @@ def sanitize_slack_str(text):
     :param text: Slack input string
     :return: text
     """
+    # Map regex to their associated sanitizing fn's
+    re_to_san = {re_chan: sanitize_chan_str,
+                 re_link: sanitize_link_str,
+                 re_user: sanitize_user_str}
 
-    # TODO: Convert function/regex matches to data struct and below to loop it.
-    if re.search(re_chan, text):
-        matches = re.findall(re_chan, text)
-
-        for match in matches:
-            text = sanitize_chan_str(text, match)
-
-    if re.search(re_link, text):
-        matches = re.findall(re_link, text)
-
-        for match in matches:
-            text = sanitize_link_str(text, match)
-
-    if re.search(re_user, text):
-        matches = re.findall(re_user, text)
-
-        for match in matches:
-            text = sanitize_user_str(text, match)
+    # Loop through Mapping, search for regex matches in text, call san fn's as needed
+    for r in re_to_san.keys():
+        if re.search(r, text):
+            matches = re.findall(r, text)
+            for match in matches:
+                text = re_to_san[r](text, match)
 
     return text
+
