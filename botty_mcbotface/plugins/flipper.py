@@ -95,13 +95,14 @@ fix_responses = ['Yea... I\'m not fixing that...',
                  'That\'s not a table!']
 
 table_flipper = "┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻"
+re_table = re.compile('^tables? ?$')
 
 # Append an inverted form of replacements to itself, so flipping works both ways
 replacements.update(dict((v, k) for k, v in replacements.items()))
 
 
 @listen_to('^\.flip (.*)', re.IGNORECASE)
-def flip(message, text):
+def flip(message, txt):
     """
     <text> -- Flips <text> over.
     :param message: Slackbot message object
@@ -110,9 +111,9 @@ def flip(message, text):
     """
     global table_status
     chan = message._body['channel']
-    re_table = re.compile('tables?$')
+    text = txt.strip()
 
-    if re.match(re_table, text.strip()):
+    if re.match(re_table, text):
         table_status[chan] = True
         return message.send(random_response([random.choice(flippers) + " ︵ " + "┻━┻", table_flipper]))
     elif text == "5318008":
@@ -128,12 +129,13 @@ def flip(message, text):
 
 
 @listen_to('^\.fix (.*)', re.IGNORECASE)
-def fix(message, text):
+def fix(message, txt):
     """fixes a flipped over table. ┬─┬ノ(ಠ_ಠノ)"""
     global table_status
     chan = message._body['channel']
+    text = txt.strip()
 
-    if text in ['table', 'tables']:
+    if re.match(re_table, text):
 
         if table_status[chan]:
             table_status[chan] = False
