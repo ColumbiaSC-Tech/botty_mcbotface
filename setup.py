@@ -8,7 +8,7 @@ def readme():
         return f.read()
 
 setup(name='botty_mcbotface',
-      version='1.2.8',
+      version='1.2.9',
       description='General purpose Slack-bot with personality',
       long_description=readme(),
       url='https://github.com/ColumbiaSC-Tech/botty_mcbotface',
@@ -34,6 +34,7 @@ setup(name='botty_mcbotface',
       keywords='slack bot slackbot',
       license='MIT',
       packages=['botty_mcbotface',
+                'botty_mcbotface.body',
                 'botty_mcbotface.data',
                 'botty_mcbotface.plugins',
                 'botty_mcbotface.utils'],
