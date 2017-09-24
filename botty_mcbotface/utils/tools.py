@@ -1,7 +1,7 @@
 from random import choice
 from requests import request
 from bs4 import BeautifulSoup
-import collections
+import re
 
 
 # *** General Methods *** #
@@ -45,5 +45,3 @@ def random_response(responses):
         return choice(responses)
 
     raise TypeError
-
-

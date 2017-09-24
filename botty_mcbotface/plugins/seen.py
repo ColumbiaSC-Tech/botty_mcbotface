@@ -1,7 +1,9 @@
 from datetime import datetime
-from slackbot.bot import listen_to, re
-from botty_mcbotface.utils.user_api import get_user_name_by_id, get_user_message_history
+
 import pytz
+from slackbot.bot import listen_to, re
+
+from botty_mcbotface.botty.api import get_user_name_by_id, get_user_message_history
 
 
 @listen_to('^\.seen (.*)', re.IGNORECASE)

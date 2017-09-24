@@ -12,14 +12,20 @@ def google(message, search):
     :param search: User search string
     :return: Message to slack channel
     """
+
     search_url = 'https://www.google.com/search?q=' + urllib.parse.quote_plus(search)
     first_result = get_html(search_url).select('h3.r > a')
 
+    # Indicators for google search links
+    skip_links = ['Images for <b>', 'News for <b>']
+
     try:
-        # Skip the first link if it's a google images link
-        res = first_result[1]['href'] if 'Images for ' in first_result[0] else first_result[0]['href']
+        # Skip the first link if it's a google search link (images, news etc)
+        res = first_result[1]['href'] if [s in first_result[0] for s in skip_links] else first_result[0]['href']
+
         # Remove google link tracking metadata from URL
         link = re.sub(r'^/url\?q=', '', res).split('&sa=', 1)[0]
+
         return message.send(unquote(link))
 
     except IndexError:
