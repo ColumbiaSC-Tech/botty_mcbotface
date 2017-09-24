@@ -12,11 +12,9 @@ def arise(message):
     :return: Message to slack channel
     """
     # message.react('+1')
-    responses = [
-        'ugh... fine.',
-        '_Up from the 36 chambers!!!!_',
-        '_rubs eyes_\n ...huh?',
-        ':fire::fire::fire:ᕦ໒( ᴼ 益 ᴼ )७ᕤ:fire::fire::fire:'
-    ]
+    responses = ['ugh... fine.',
+                 '_Up from the 36 chambers!!!!_',
+                 '_rubs eyes_\n ...huh?',
+                 ':fire::fire::fire:ᕦ໒( ᴼ 益 ᴼ )७ᕤ:fire::fire::fire:']
 
     return message.send(random_response(responses))

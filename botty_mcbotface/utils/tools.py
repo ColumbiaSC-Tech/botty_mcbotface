@@ -1,6 +1,7 @@
 from random import choice
 from requests import request
 from bs4 import BeautifulSoup
+import re
 
 
 # *** General Methods *** #
@@ -21,6 +22,7 @@ def get_html(url):
     :param url: URL to get HTML from
     :return: HTML string
     """
+    # FIXME: Figure out the 'white people' URL response
     res = request('get', url)
     return soup(res.text)
 
@@ -31,6 +33,15 @@ def random_response(responses):
     :param responses: List of response strings
     :return: A random response string
     """
-    return choice(responses)
+    def test_1d(res):
 
+        if isinstance(res, list):
+            val = True if True not in [isinstance(r, (list or tuple)) for r in res] else False
+            return val
 
+        return False
+
+    if test_1d(responses):
+        return choice(responses)
+
+    raise TypeError
