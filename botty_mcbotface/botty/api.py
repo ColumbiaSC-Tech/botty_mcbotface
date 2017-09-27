@@ -1,6 +1,9 @@
 from slacker import Slacker
-from slackbot_settings import USER_TOKEN
+from slackbot_settings import SEEN_PLUGIN_CHANNEL_EXCLUDES, USER_TOKEN
+import asyncio
+import concurrent.futures
 import re
+from pprint import pprint
 
 # Bot API Tokens have certain limitations
 # to get around that we can use the user_token
@@ -24,13 +27,46 @@ def get_user_name_by_id(user_id):
     return client.users.info(user_id).body['user']['name']
 
 
-def get_user_message_history(user_name):
+def get_all_channels():
     """
-    Returns dict of 'presence' attributes (activity, name etc.)
-    :param user_name:
-    :return:
+    Get all channels for team
+    :return: List of channels
     """
-    return client.search.messages('from:' + user_name, count=1, page=1).body
+    return client.channels.list()
+
+
+def get_user_message_history(user_name, channels):
+    """
+    Find the last message from a user
+    :param channels: Channels to include in message history search
+    :param user_name: User name to search messages from
+    :return: Slack message object
+    """
+    searches = ['from:' + user_name + ' in:' + ch for ch in channels]
+    # print(searches)
+
+    # TODO: Make async
+    # async def main():
+    #
+    #     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+    #         l = asyncio.get_event_loop()
+    #         # print([l.run_in_executor(executor, client.search.messages, s) for s in searches])
+    #         futures = [l.run_in_executor(executor, client.search.messages, s, count=1, page=1) for s in searches]
+    #
+    #         for res in await asyncio.gather(*futures):
+    #             pprint(res.body)
+    #
+    # loop = asyncio.get_event_loop()
+    # return loop.run_until_complete(main())
+    # TODO: Finish finding max UTC and return that message
+    results = [client.search.messages(s, count=1, page=1).body for s in searches]
+    maximum = float(results[0]['messages']['matches'][0]['ts'])
+
+    for res in results:
+        if float(res['messages']['matches'][0]['ts']) > maximum:
+            maximum = res
+
+        return res
 
 
 def sanitize_chan_str(txt, match):
