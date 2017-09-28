@@ -26,6 +26,9 @@ is technically a plugin for (though he himself has a multitude of plugins as wel
     # User to send errors to in DM
     ERRORS_TO = 'danny'
 
+    # Exclude list for .seen command channel/message search
+    SEEN_PLUGIN_CHANNEL_BLACKLIST = ['admin']
+
     # Include all plugins like below, otherwise you can specify with multiple list items
     PLUGINS = [
         'botty_mcbotface.plugins'
