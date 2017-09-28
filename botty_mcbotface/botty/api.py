@@ -1,13 +1,16 @@
+from slackbot_settings import SEEN_PLUGIN_CHANNEL_BLACKLIST as BLACKLIST
+from slackbot_settings import USER_TOKEN
 from slacker import Slacker
-from slackbot_settings import SEEN_PLUGIN_CHANNEL_EXCLUDES, USER_TOKEN
+import re
 import asyncio
 import concurrent.futures
-import re
-from pprint import pprint
 
 # Bot API Tokens have certain limitations
 # to get around that we can use the user_token
 client = Slacker(USER_TOKEN)
+
+# Start an event loop for async requests
+loop = asyncio.get_event_loop()
 
 # Regular expressions for sanitizing Slack formatted input strings
 re_chan = re.compile(r'<#[A-Z0-9]*\|[^>]*>')
@@ -16,6 +19,14 @@ re_user = re.compile(r'<@[A-Z0-9]*>')
 
 
 # *** Slacker API Methods *** #
+
+def get_all_channels():
+    """
+    Get all channels for team
+    :return: List of channels
+    """
+
+    return client.channels.list()
 
 
 def get_user_name_by_id(user_id):
@@ -27,14 +38,6 @@ def get_user_name_by_id(user_id):
     return client.users.info(user_id).body['user']['name']
 
 
-def get_all_channels():
-    """
-    Get all channels for team
-    :return: List of channels
-    """
-    return client.channels.list()
-
-
 def get_user_message_history(user_name, channels):
     """
     Find the last message from a user
@@ -42,31 +45,23 @@ def get_user_message_history(user_name, channels):
     :param user_name: User name to search messages from
     :return: Slack message object
     """
-    searches = ['from:' + user_name + ' in:' + ch for ch in channels]
-    # print(searches)
 
-    # TODO: Make async
-    # async def main():
-    #
-    #     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
-    #         l = asyncio.get_event_loop()
-    #         # print([l.run_in_executor(executor, client.search.messages, s) for s in searches])
-    #         futures = [l.run_in_executor(executor, client.search.messages, s, count=1, page=1) for s in searches]
-    #
-    #         for res in await asyncio.gather(*futures):
-    #             pprint(res.body)
-    #
-    # loop = asyncio.get_event_loop()
-    # return loop.run_until_complete(main())
-    # TODO: Finish finding max UTC and return that message
-    results = [client.search.messages(s, count=1, page=1).body for s in searches]
-    maximum = float(results[0]['messages']['matches'][0]['ts'])
+    # Build list of search strings for each channel, skipping blacklisted channels
+    searches = ['from:' + user_name + ' in:' + ch for ch in channels if ch not in BLACKLIST]
 
-    for res in results:
-        if float(res['messages']['matches'][0]['ts']) > maximum:
-            maximum = res
+    # Async/MultiThread searching all channels
+    async def pool_api_search():
+        with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+            futures = [loop.run_in_executor(executor, client.search.messages, s) for s in searches]
 
-        return res
+            return [res.body for res in await asyncio.gather(*futures)]
+
+    results = loop.run_until_complete(pool_api_search())
+
+    # Get the most recent message via timestamp
+    max_res = max(results, key=lambda r: r['messages']['matches'][0]['ts'])
+
+    return max_res
 
 
 def sanitize_chan_str(txt, match):
