@@ -58,8 +58,8 @@ def get_user_message_history(user_name, channels):
 
     results = loop.run_until_complete(pool_api_search())
 
-    # Get the most recent message via timestamp
-    max_res = max(results, key=lambda r: r['messages']['matches'][0]['ts'])
+    # Get the most recent message via timestamps
+    max_res = max(results, key=lambda r: r['messages']['matches'][0]['ts'] if r['messages']['matches'][0]['ts'] else 0)
 
     return max_res
 
