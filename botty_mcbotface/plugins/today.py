@@ -1,5 +1,6 @@
 from slackbot.bot import listen_to, re
-from datetime import date
+from datetime import datetime
+from pytz import timezone
 import feedparser
 
 
@@ -10,8 +11,9 @@ def today(message):
     :param message: Slackbot message object
     :return: Message to slack channel
     """
-    today = date.today().strftime("%A, %B %d, %Y.")
-    msg = "Today is {}\nToday's Holidays:\n".format(today)
+    east_tz = timezone('US/Eastern')
+    _today = datetime.now(east_tz).strftime("%A, %B %d, %Y.")
+    msg = "Today is {}\nToday's Holidays:\n".format(_today)
 
     holidays = feedparser.parse("https://www.checkiday.com/rss.php?tz=America/New_York")
 
