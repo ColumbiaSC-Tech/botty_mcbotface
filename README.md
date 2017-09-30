@@ -1,6 +1,6 @@
-# Setup
+# botty_mcbotface setup
 
-## Overview
+## overview
 
 A [slackbot](https://github.com/lins05/slackbot) plugin that acts as a general purpose Slack bot.
 Although botty_mcbotface is not sentient, it does display a little sense of humor.
@@ -9,7 +9,7 @@ Much inspiration drawn from snoonet's [gonzobot](https://github.com/snoonetIRC/C
 The main build is from lins05's [slackbot](https://github.com/lins05/slackbot), which botty_mcbotface
 is technically a plugin for (though he himself has a multitude of plugins as well).
 
-## Installation
+## installation
 *For more info on the setup for slackbot (number 2 & 3 below) you can read up [here](https://github.com/lins05/slackbot)*
 
 1. Start a virtualenv in whatever directory you want to run botty,
@@ -56,12 +56,12 @@ is technically a plugin for (though he himself has a multitude of plugins as wel
 5. Run `python run.py`:
 
 
-## Contributors
+## contributors
 
 [Danny Hinshaw](https://github.com/DannyHinshaw)
 
 [Benjamin Matthews](https://github.com/bmatt468)
 
-## License
+## license
 
 The MIT License (see [LICENSE](LICENSE))

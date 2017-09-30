@@ -3,6 +3,9 @@ from six.moves.urllib.parse import unquote
 from slackbot.bot import listen_to, re
 import urllib.parse
 
+google_base_url = 'https://www.google.com/search?q='
+youtube_base_url = 'https://www.youtube.com/results?search_query='
+
 
 @listen_to('^\.g (.*)', re.IGNORECASE)
 def google(message, search):
@@ -13,18 +16,18 @@ def google(message, search):
     :return: Message to slack channel
     """
 
-    search_url = 'https://www.google.com/search?q=' + urllib.parse.quote_plus(search)
-    first_result = get_html(search_url).select('h3.r > a')
+    search_url = google_base_url + urllib.parse.quote_plus(search)
+    results = get_html(search_url).select('div.g h3.r a')
 
     # Indicators for google search links
-    skip_links = ['Images for <b>', 'News for <b>']
+    g_link_test = re.compile(r'/search\?q=')
 
     try:
         # Skip the first link if it's a google search link (images, news etc)
-        res = first_result[1]['href'] if [s in first_result[0] for s in skip_links] else first_result[0]['href']
+        first_result = next(l for l in results if not re.search(g_link_test, str(l)))
 
         # Remove google link tracking metadata from URL
-        link = re.sub(r'^/url\?q=', '', res).split('&sa=', 1)[0]
+        link = re.sub(r'^/url\?q=', '', first_result['href']).split('&sa=', 1)[0]
 
         return message.send(unquote(link))
 
@@ -40,10 +43,10 @@ def youtube(message, search):
     :param search: User search string
     :return: Message to slack channel
     """
-    search_url = 'https://www.youtube.com/results?search_query=' + search
+    search_url = youtube_base_url + search
 
     # YouTube html is funky when using HTTP request. Have to wrangle it a little to get the video links
-    res = (a['href'] for a in get_html(search_url).select('a.yt-uix-sessionlink') if a['href'].startswith('/watch?v='))
-    link = 'https://www.youtube.com' + next(res)
+    res = next(a for a in get_html(search_url).select('a.yt-uix-sessionlink') if a['href'].startswith('/watch?v='))
+    link = 'https://www.youtube.com' + res['href']
 
     return message.send(unquote(link))

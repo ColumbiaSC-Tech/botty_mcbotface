@@ -36,8 +36,7 @@ def random_response(responses):
     def test_1d(res):
 
         if isinstance(res, list):
-            val = True if True not in [isinstance(r, (list or tuple)) for r in res] else False
-            return val
+            return True if True not in [isinstance(r, (list or set or tuple)) for r in res] else False
 
         return False
 
