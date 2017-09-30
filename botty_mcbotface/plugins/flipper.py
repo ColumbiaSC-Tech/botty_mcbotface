@@ -95,6 +95,7 @@ fix_responses = ['Yea... I\'m not fixing that...',
                  'That\'s not a table!']
 
 table_flipper = "┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻"
+
 re_table = re.compile('^tables? ?$')
 
 # Append an inverted form of replacements to itself, so flipping works both ways
