@@ -2,7 +2,7 @@ from botty_mcbotface.utils.tools import get_html
 from six.moves.urllib.parse import unquote
 from slackbot.bot import listen_to, re
 import urllib.parse
-
+from pprint import pprint
 google_base_url = 'https://www.google.com/search?q='
 youtube_base_url = 'https://www.youtube.com/results?search_query='
 
@@ -31,8 +31,8 @@ def google(message, search):
 
         return message.send(unquote(link))
 
-    except IndexError:
-        return message.send('No results for that search... sorry :/')
+    except StopIteration:
+        return message.send('No Google results for that search... sorry :/')
 
 
 @listen_to('^\.y (.*)', re.IGNORECASE)
@@ -44,9 +44,15 @@ def youtube(message, search):
     :return: Message to slack channel
     """
     search_url = youtube_base_url + search
+    results = get_html(search_url).select('a.yt-uix-sessionlink')
 
-    # YouTube html is funky when using HTTP request. Have to wrangle it a little to get the video links
-    res = next(a for a in get_html(search_url).select('a.yt-uix-sessionlink') if a['href'].startswith('/watch?v='))
-    link = 'https://www.youtube.com' + res['href']
+    try:
+
+        # YouTube html is funky when using HTTP request. Have to wrangle it a little to get the video links
+        first_result = next(l for l in results if l['href'].startswith('/watch?v='))
+        link = 'https://www.youtube.com' + first_result['href']
+
+    except StopIteration:
+        return message.send('No YouTube results for that search... sorry :/')
 
     return message.send(unquote(link))

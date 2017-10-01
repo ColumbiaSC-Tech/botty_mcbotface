@@ -25,8 +25,9 @@ def get_all_channels():
     Get all channels for team
     :return: List of channels
     """
+    channel_list = client.channels.list()
 
-    return client.channels.list()
+    return channel_list
 
 
 def get_user_name_by_id(user_id):
@@ -35,7 +36,9 @@ def get_user_name_by_id(user_id):
     :param user_id:
     :return: user_name
     """
-    return client.users.info(user_id).body['user']['name']
+    user_name = client.users.info(user_id).body['user']['name']
+
+    return user_name
 
 
 def get_user_message_history(user_name, channels):
@@ -67,12 +70,11 @@ def get_user_message_history(user_name, channels):
 def sanitize_chan_str(txt, match):
     """
     Sanitizes channel formatted Slack input strings
-    (<#chan-name> => #chan-name)
+    (<#C73N8JF9|chan-name> => #chan-name)
     :param txt: Slack input string
     :param match: Regex found match to replace
     :return:
     """
-
     # Extract the channel name from surrounding chars
     start, second = re.split('<#[A-Z0-9]*\|', match)
     channel_name = '#' + second.split('>')[0]

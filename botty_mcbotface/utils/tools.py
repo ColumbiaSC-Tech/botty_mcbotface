@@ -1,7 +1,6 @@
+import requests
 from random import choice
-from requests import request
 from bs4 import BeautifulSoup
-import re
 
 
 # *** General Methods *** #
@@ -13,6 +12,7 @@ def soup(html):
     :return: BeautifulSoup object
     """
     bs = BeautifulSoup(html, 'lxml')
+
     return bs
 
 
@@ -22,9 +22,10 @@ def get_html(url):
     :param url: URL to get HTML from
     :return: HTML string
     """
-    # FIXME: Figure out the 'white people' URL response
-    res = request('get', url)
-    return soup(res.text)
+    res = requests.get(url)
+    s = soup(res.text)
+
+    return s
 
 
 def random_response(responses):
@@ -36,6 +37,7 @@ def random_response(responses):
     def test_1d(res):
 
         if isinstance(res, list):
+            # Currently don't support random on nested data structures
             return True if True not in [isinstance(r, (list or set or tuple)) for r in res] else False
 
         return False
