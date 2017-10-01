@@ -3,10 +3,15 @@ from bs4 import BeautifulSoup
 import botty_mcbotface.utils.tools as tools
 import os.path
 import requests_mock
+import warnings
 
 
 class TestTools(TestCase):
     def setUp(self):
+
+        # lxml module throws warnings only relevant in production
+        warnings.filterwarnings("ignore", category=DeprecationWarning)
+        warnings.filterwarnings("ignore", category=ResourceWarning)
         self.test_html = os.path.abspath('test_botty/mocks/google_test.html')
 
     def tearDown(self):
@@ -27,7 +32,7 @@ class TestTools(TestCase):
         test_list = [1, 2, 3, 4, 5]
 
         # Loop just to run it a few times
-        for n in test_list:
+        for _ in test_list:
             self.assertTrue(tools.random_response(test_list) in test_list)
 
     def test_random_choice_requires_flat_list_or_tuple(self):

@@ -107,7 +107,7 @@ def flip(message, txt):
     """
     <text> -- Flips <text> over.
     :param message: Slackbot message object
-    :param text: Text to flip
+    :param txt: Text to flip
     :return: Message to slack channel
     """
     global table_status

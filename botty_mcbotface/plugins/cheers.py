@@ -2,24 +2,24 @@
 from slackbot.bot import listen_to, re
 from botty_mcbotface.utils.tools import random_response
 
-_cheers = ["UNNNNNHHH NA NA NA NAA!!!!!!",
-           "CHEEEEEEEEAAAAA BOIIIIIIIII!!!!",
-           "DOGGIE DOGGIE WHAT NOW?!",
-           "♪  ┏(°.°)┛ GET DOWN ┗(°.°)┓ ♬",
-           "GAME ON!!!!",
-           "GET SOME!!",
-           "HOORAH!",
-           "HURRAY!",
-           "OORAH!",
-           "OOHHHYEEEEEEEEEEEAH!",
-           "YAY!",
-           "*\o/* CHEERS! *\o/*",
-           "HOOHAH!",
-           "HOOYAH!",
-           "HUAH!",
-           "WOOT!!",
-           "WHOOP WHOOP!!",
-           "♪  ┏(°.°)┛  ┗(°.°)┓ ♬"]
+responses = ["UNNNNNHHH NA NA NA NAA!!!!!!",
+             "CHEEEEEEEEAAAAA BOIIIIIIIII!!!!",
+             "DOGGIE DOGGIE WHAT NOW?!",
+             "♪  ┏(°.°)┛ GET DOWN ┗(°.°)┓ ♬",
+             "GAME ON!!!!",
+             "GET SOME!!",
+             "HOORAH!",
+             "HURRAY!",
+             "OORAH!",
+             "OOHHHYEEEEEEEEEEEAH!",
+             "YAY!",
+             "*\o/* CHEERS! *\o/*",
+             "HOOHAH!",
+             "HOOYAH!",
+             "HUAH!",
+             "WOOT!!",
+             "WHOOP WHOOP!!",
+             "♪  ┏(°.°)┛  ┗(°.°)┓ ♬"]
 
 
 @listen_to(r'^\\o/', re.IGNORECASE)
@@ -29,4 +29,4 @@ def cheers(message):
     :param message: Slackbot message object
     :return: Message to slack channel
     """
-    return message.send(random_response(_cheers))
+    return message.send(random_response(responses))

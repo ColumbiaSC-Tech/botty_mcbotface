@@ -1,9 +1,9 @@
 from unittest import TestCase
 from test_botty.mocks.mocks import MockMessage
-from botty_mcbotface.plugins.arise import arise, responses
+from botty_mcbotface.plugins.help import help, help_msg
 
 
-class TestArise(TestCase):
+class TestHelp(TestCase):
     def setUp(self):
         self.message = MockMessage()
 
@@ -11,4 +11,4 @@ class TestArise(TestCase):
         del self
 
     def test_arise(self):
-        self.assertTrue(arise(self.message) in responses)
+        self.assertTrue(help(self.message) in help_msg)
