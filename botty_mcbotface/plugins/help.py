@@ -15,7 +15,7 @@ help_msg = '\nI\'m not a very smart baht...\n' \
 
 
 @respond_to(r'^halp|help', re.IGNORECASE)
-def help_bot(message):
+def help(message):
     """
     List botty's current commands
     :param message: Message to bot requesting help
