@@ -1,3 +1,4 @@
+from nose.tools import assert_true
 from unittest import TestCase
 from test_botty.mocks.mocks import MockMessage
 from botty_mcbotface.plugins.arise import arise, responses
@@ -11,4 +12,4 @@ class TestArise(TestCase):
         del self
 
     def test_arise(self):
-        self.assertTrue(arise(self.message) in responses)
+        assert_true(arise(self.message) in responses)

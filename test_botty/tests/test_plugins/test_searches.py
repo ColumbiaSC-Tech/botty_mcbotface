@@ -1,5 +1,6 @@
 import os
 import warnings
+from nose.tools import assert_in, assert_true
 from unittest import TestCase
 from unittest.mock import patch
 from test_botty.mocks.mocks import MockMessage, Response
@@ -33,7 +34,7 @@ class TestSearches(TestCase):
         # Call main method
         first_result = google(mock_message, 'testing')
 
-        self.assertTrue('http://istqbexamcertification.com/what-is-software-testing/' == first_result)
+        assert_true('http://istqbexamcertification.com/what-is-software-testing/' == first_result)
 
     @patch('requests.get')
     def test_youtube_search(self, mock_get_html):
@@ -48,7 +49,7 @@ class TestSearches(TestCase):
         # Call main method
         first_result = youtube(mock_message, 'testing')
 
-        self.assertTrue('https://www.youtube.com/watch?v=Bi-v6M4fGbA' in first_result)
+        assert_in('https://www.youtube.com/watch?v=Bi-v6M4fGbA', first_result)
 
     @patch('requests.get')
     def test_google_search_handles_no_results(self, mock_get_html):
@@ -56,7 +57,7 @@ class TestSearches(TestCase):
         mock_get_html.return_value.text = ''
         response = google(mock_message, 'testing')
 
-        self.assertTrue('No Google results' in response)
+        assert_true('No Google results', response)
 
     @patch('requests.get')
     def test_youtube_search_nhandles_no_results(self, mock_get_html):
@@ -64,4 +65,4 @@ class TestSearches(TestCase):
         mock_get_html.return_value.text = ''
         response = youtube(mock_message, 'testing')
 
-        self.assertTrue('No YouTube results' in response)
+        assert_true('No YouTube results', response)

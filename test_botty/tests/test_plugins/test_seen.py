@@ -1,4 +1,5 @@
 import warnings
+from nose.tools import assert_in
 from unittest import TestCase
 from unittest.mock import patch
 from test_botty.mocks.mocks import MockMessage, Response
@@ -22,7 +23,7 @@ class TestSearches(TestCase):
 
     def test_seen_handle_not_a_user_name(self):
         response = seen(mock_message, 'SHOULD NOT MATCH')
-        self.assertTrue('Did you search with a username?' in response)
+        assert_in('Did you search with a username?', response)
 
     @patch('botty_mcbotface.botty.api.')
     def test_seen_find_last_message_by_user(self):

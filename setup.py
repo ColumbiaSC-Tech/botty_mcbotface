@@ -28,6 +28,7 @@ setup(name='botty_mcbotface',
           'cchardet',
           'feedparser',
           'lxml',
+          'nose',
           'pytz',
           'requests',
           'slackbot'

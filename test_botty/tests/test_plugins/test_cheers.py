@@ -1,3 +1,4 @@
+from nose.tools import assert_true
 from unittest import TestCase
 from test_botty.mocks.mocks import MockMessage
 from botty_mcbotface.plugins.cheers import cheers, responses
@@ -11,4 +12,4 @@ class TestCheers(TestCase):
         del self
 
     def test_cheers(self):
-        self.assertTrue(cheers(self.message) in responses)
+        assert_true(cheers(self.message) in responses)
