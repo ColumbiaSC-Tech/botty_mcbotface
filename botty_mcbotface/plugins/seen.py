@@ -1,7 +1,8 @@
 from slackbot.bot import listen_to, re
-from botty_mcbotface.botty import api
 from datetime import datetime
 import pytz
+
+from botty_mcbotface.botty import api
 
 
 @listen_to('^\.seen (.*)', re.IGNORECASE)
@@ -12,6 +13,7 @@ def seen(message, text):
     :param text: Text to flip
     :return: Message to slack channel
     """
+
     # Search must be a valid Slack formatted username
     if not re.match('^<@[A-Z0-9]*>$', text.strip()):
         return message.send('Did you search with a username? (ie @botty_mcbotface)')

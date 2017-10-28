@@ -1,9 +1,9 @@
-from slackbot_settings import SEEN_PLUGIN_CHANNEL_BLACKLIST as BLACKLIST
-from slackbot_settings import USER_TOKEN
-from slacker import Slacker
 import re
 import asyncio
 import concurrent.futures
+from slackbot_settings import SEEN_PLUGIN_CHANNEL_BLACKLIST as BLACKLIST
+from slackbot_settings import USER_TOKEN
+from slacker import Slacker
 
 # Bot API Tokens have certain limitations
 # to get around that we can use the user_token
@@ -32,9 +32,9 @@ def get_all_channels():
 
 def get_user_name_by_id(user_id):
     """
-    Returns a user_name for a given user_id
+    Returns a user_name for a given user_id.
     :param user_id:
-    :return: user_name
+    :return:
     """
     user_name = client.users.info(user_id).body['user']['name']
 
@@ -43,10 +43,10 @@ def get_user_name_by_id(user_id):
 
 def get_user_message_history(user_name, channels):
     """
-    Find the last message from a user
-    :param channels: Channels to include in message history search
-    :param user_name: User name to search messages from
-    :return: Slack message object
+    Find the most recent message from a user.
+    :param channels: Channels to include in message history search.
+    :param user_name: User name to search messages from.
+    :return: Slack message object.
     """
 
     # Build list of search strings for each channel, skipping blacklisted channels
@@ -62,17 +62,17 @@ def get_user_message_history(user_name, channels):
     results = loop.run_until_complete(pool_api_search())
 
     # Get the most recent message via timestamps
-    max_res = max(results, key=lambda r: r['messages']['matches'][0]['ts'] if r['messages']['matches'][0]['ts'] else 0)
+    max_res = max(results, key=lambda r: r['messages']['matches'][0]['ts'] if r['messages']['matches'] else '0')
 
     return max_res
 
 
 def sanitize_chan_str(txt, match):
     """
-    Sanitizes channel formatted Slack input strings
+    Sanitizes channel formatted Slack input strings.
     (<#C73N8JF9|chan-name> => #chan-name)
-    :param txt: Slack input string
-    :param match: Regex found match to replace
+    :param txt: Slack input string.
+    :param match: Regex found match to replace.
     :return:
     """
     # Extract the channel name from surrounding chars
@@ -84,10 +84,10 @@ def sanitize_chan_str(txt, match):
 
 def sanitize_link_str(txt, match):
     """
-    Sanitizes link formatted Slack input strings
+    Sanitizes link formatted Slack input strings.
     (<http://slack.com|slack.com> => slack.com)
-    :param txt: Slack input string
-    :param match: Regex found match to replace
+    :param txt: Slack input string.
+    :param match: Regex found match to replace.
     :return:
     """
 
@@ -100,10 +100,10 @@ def sanitize_link_str(txt, match):
 
 def sanitize_user_str(txt, match):
     """
-    Sanitizes user-name formatted Slack input strings (userIDs)
+    Sanitizes user-name formatted Slack input strings (userIDs).
     (<@IU43HD933> => @username)
-    :param txt: Slack input string
-    :param match: Regex found match to replace
+    :param txt: Slack input string.
+    :param match: Regex found match to replace.
     :return:
     """
     # Extract the id from surrounding chars
@@ -118,9 +118,9 @@ def sanitize_user_str(txt, match):
 
 def sanitize_slack_str(text):
     """
-    Catch all function for parsing input strings
-    and replacing Slack formatting
-    :param text: Slack input string
+    Catch all function for parsing input strings.
+    and replacing Slack formatting.
+    :param text: Slack input string.
     :return: text
     """
     # Map regex to their associated sanitizing fn's
