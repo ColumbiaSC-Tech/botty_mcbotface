@@ -22,9 +22,10 @@ class TestSearches(TestCase):
         del self
 
     def test_seen_handle_not_a_user_name(self):
+        """Test seen command handles when the searched username is invalid"""
         response = seen(mock_message, 'SHOULD NOT MATCH')
         assert_in('Did you search with a username?', response)
 
-    @patch('botty_mcbotface.botty.api.')
-    def test_seen_find_last_message_by_user(self):
-        pass
+    # @patch('botty_mcbotface.botty.api.')
+    # def test_seen_find_last_message_by_user(self):
+    #     pass

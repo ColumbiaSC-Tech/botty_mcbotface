@@ -12,4 +12,5 @@ class TestCheers(TestCase):
         del self
 
     def test_cheers(self):
+        """Test cheers command responses are valid"""
         assert_true(cheers(self.message) in responses)

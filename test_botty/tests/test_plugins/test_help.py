@@ -12,4 +12,5 @@ class TestHelp(TestCase):
         del self
 
     def test_arise(self):
+        """Test help command response is valid"""
         assert_in(help(self.message), help_msg)

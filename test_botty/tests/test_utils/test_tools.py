@@ -19,6 +19,7 @@ class TestTools(TestCase):
         del self
 
     def test_soup_returns_html(self):
+        """Test soup utility fn returns a BeautifulSoup object"""
         with open(self.test_html) as html:
             assert_is_instance(tools.soup(html), BeautifulSoup)
 
@@ -30,6 +31,7 @@ class TestTools(TestCase):
                 assert_is_instance(res, BeautifulSoup)
 
     def test_random_choice_mechanism(self):
+        """Test random_response utility fn returns random response"""
         test_list = [1, 2, 3, 4, 5]
 
         # Loop just to run it a few times
@@ -37,6 +39,7 @@ class TestTools(TestCase):
             assert_in(tools.random_response(test_list), test_list)
 
     def test_random_choice_requires_flat_list_or_tuple(self):
+        """Test random_response utility fn checks data type before running"""
         test_error_types = [1, 'string', {'test': 'dict', 'key': 'val'}, (1, 2, 'tuple'), ['2d', ['list']]]
 
         for t in test_error_types:

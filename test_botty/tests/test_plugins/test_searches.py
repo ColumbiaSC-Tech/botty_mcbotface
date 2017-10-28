@@ -1,6 +1,6 @@
 import os
 import warnings
-from nose.tools import assert_in, assert_true
+from nose.tools import assert_equals, assert_in, assert_true
 from unittest import TestCase
 from unittest.mock import patch
 from test_botty.mocks.mocks import MockMessage, Response
@@ -22,6 +22,7 @@ class TestSearches(TestCase):
 
     @patch('requests.get')
     def test_google_search(self, mock_get_html):
+        """Test google search retrieves first search result from google"""
 
         # Path to mock link results data
         curr_dir = os.path.dirname(__file__)
@@ -34,10 +35,11 @@ class TestSearches(TestCase):
         # Call main method
         first_result = google(mock_message, 'testing')
 
-        assert_true('http://istqbexamcertification.com/what-is-software-testing/' == first_result)
+        assert_equals('http://istqbexamcertification.com/what-is-software-testing/', first_result)
 
     @patch('requests.get')
     def test_youtube_search(self, mock_get_html):
+        """Test youtube search retrieves first search result from youtube"""
 
         # Path to mock link results data
         curr_dir = os.path.dirname(__file__)
@@ -53,15 +55,15 @@ class TestSearches(TestCase):
 
     @patch('requests.get')
     def test_google_search_handles_no_results(self, mock_get_html):
-
+        """Test google search command can handle no search results"""
         mock_get_html.return_value.text = ''
         response = google(mock_message, 'testing')
 
         assert_true('No Google results', response)
 
     @patch('requests.get')
-    def test_youtube_search_nhandles_no_results(self, mock_get_html):
-
+    def test_youtube_search_handles_no_results(self, mock_get_html):
+        """Test youtube search command can handle no search results"""
         mock_get_html.return_value.text = ''
         response = youtube(mock_message, 'testing')
 
