@@ -31,7 +31,8 @@ setup(name='botty_mcbotface',
           'nose',
           'pytz',
           'requests',
-          'slackbot'
+          'slackbot',
+          'sqlalchemy'
       ],
       keywords='slack bot slackbot',
       license='MIT',
