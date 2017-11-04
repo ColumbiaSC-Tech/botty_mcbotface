@@ -4,8 +4,10 @@ from setuptools import setup
 
 
 def readme():
+    """Grab the rst version of docs for pypi."""
     with open('README.rst') as f:
         return f.read()
+
 
 setup(name='botty_mcbotface',
       version='1.3.5',
@@ -24,6 +26,7 @@ setup(name='botty_mcbotface',
           'Programming Language :: Python :: 3.5',
       ],
       install_requires=[
+          'arrow',
           'bs4',
           'cchardet',
           'feedparser',
@@ -34,7 +37,7 @@ setup(name='botty_mcbotface',
           'slackbot',
           'sqlalchemy'
       ],
-      keywords='slack bot slackbot',
+      keywords='slack bot slackbot botty_mcbotface botty gonzobot',
       license='MIT',
       packages=['botty_mcbotface',
                 'botty_mcbotface.botty',
@@ -44,5 +47,5 @@ setup(name='botty_mcbotface',
       package_data={
           '': ['*.json', '*.rst', '*.txt'],
       },
-      python_requires='>=3',
+      python_requires='>=3.5',
       zip_safe=False)

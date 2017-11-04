@@ -5,8 +5,8 @@ from slackbot_settings import SEEN_PLUGIN_CHANNEL_BLACKLIST as BLACKLIST
 from slackbot_settings import USER_TOKEN
 from slacker import Slacker
 
-# Bot API Tokens have certain limitations
-# to get around that we can use the user_token
+# Bot API Tokens have certain limitations,
+# to get around that we can use the user_token.
 client = Slacker(USER_TOKEN)
 
 # Start an event loop for async requests
@@ -22,12 +22,22 @@ re_user = re.compile(r'<@[A-Z0-9]*>')
 
 def get_all_channels():
     """
-    Get all channels for team
+    Get all channels for team.
     :return: List of channels
     """
     channel_list = client.channels.list()
 
     return channel_list
+
+
+def get_all_users():
+    """
+    Get all users for team.
+    :return: List of users
+    """
+    users = client.users.list()
+
+    return users
 
 
 def get_user_name_by_id(user_id):
@@ -75,6 +85,7 @@ def sanitize_chan_str(txt, match):
     :param match: Regex found match to replace.
     :return:
     """
+
     # Extract the channel name from surrounding chars
     start, second = re.split('<#[A-Z0-9]*\|', match)
     channel_name = '#' + second.split('>')[0]
@@ -106,6 +117,7 @@ def sanitize_user_str(txt, match):
     :param match: Regex found match to replace.
     :return:
     """
+
     # Extract the id from surrounding chars
     start, second = match.split('<@')
     user_id, end = second.split('>')
@@ -123,6 +135,7 @@ def sanitize_slack_str(text):
     :param text: Slack input string.
     :return: text
     """
+
     # Map regex to their associated sanitizing fn's
     re_to_san = {re_chan: sanitize_chan_str,
                  re_link: sanitize_link_str,
