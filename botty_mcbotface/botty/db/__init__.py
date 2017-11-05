@@ -1,3 +1,5 @@
+import asyncio
+import concurrent.futures
 import os
 from botty_mcbotface.botty.api import get_all_channels, get_all_users
 from sqlalchemy import create_engine, Column, String
@@ -64,6 +66,20 @@ def populate_users():
             _id = s_name + s_id
             db_add_row(User(id=_id, slack_id=s_id, slack_name=s_name))
 
+
+# Start an event loop for async requests
+loop = asyncio.get_event_loop()
+
+
+@asyncio.coroutine
+def populate_periodic():
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+        futures = [loop.run_in_executor(executor, fn) for fn in [populate_channels, populate_users]]
+
+        yield from asyncio.gather(*futures)
+
+
+loop.run_until_complete(populate_periodic())
 
 print('DB_INIT::finished')
 populate_channels()

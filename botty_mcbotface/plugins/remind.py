@@ -1,9 +1,8 @@
 import arrow
 import asyncio
-from pprint import pprint
 from botty_mcbotface.botty.db.models.remind import Reminder
 from botty_mcbotface.botty.api import get_user_name_by_id
-from botty_mcbotface.botty.db import db, db_add_row, session, User
+from botty_mcbotface.botty.db import db_add_row, session, User
 from slackbot.bot import listen_to, re
 
 db_add_row(Reminder(added_user='nulleffortU5GPFNFP0',
@@ -12,8 +11,10 @@ db_add_row(Reminder(added_user='nulleffortU5GPFNFP0',
                     message='hard-coded reminder',
                     remind_time=arrow.utcnow().datetime))
 
-delete_user = db.metadata.tables['users'].delete().where(User.id == 'nulleffortU5GPFNFP0')
-session.add(delete_user)
+# delete_user = db.metadata.tables['users'].delete().where(User.id == 'nulleffortU5GPFNFP0')
+delete_user = session.query(User).get('nulleffortU5GPFNFP0')
+session.delete(delete_user)
+
 session.commit()
 session.close()
 
