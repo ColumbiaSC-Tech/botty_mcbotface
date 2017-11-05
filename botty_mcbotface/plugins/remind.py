@@ -16,21 +16,41 @@ class Reminder(db.base):
     message = Column(String(512))
     remind_time = Column(DateTime)
 
-    users = relationship('User', back_populates='reminders', cascade="all, delete-orphan", single_parent=True)
+    users = relationship(User, backref='reminders')
 
 
-User.reminders = relationship('Reminder', back_populates='users', cascade="all, delete-orphan")
-# db.base.metadata.create_all(db.engine)
 Reminder.__table__.create(db.engine)
+
+db_add_row(Reminder(added_user='nulleffortU5GPFNFP0',
+                    added_time=arrow.utcnow().datetime,
+                    added_chan='test_chan',
+                    message='hard-coded reminder',
+                    remind_time=arrow.utcnow().datetime))
 
 
 def get_reminders(u_id):
-    reminders = db.session.query(Reminder).filter(Reminder.added_user == u_id).all()
-    return reminders
+    """
+
+    :param u_id:
+    :return:
+    """
+    user = db.session.query(User).get(u_id)
+    print('user by id: ', user.slack_name)
+
+    reminders = user.reminders
+    print('reminders by user by id: ', reminders)
+
+    return [r.message for r in reminders]
 
 
 @listen_to('^\.remind (.*)', re.IGNORECASE)
 def remind(message, text):
+    """
+
+    :param message:
+    :param text:
+    :return:
+    """
     data = message._body
     u_id = data['user']
     u_name = get_user_name_by_id(u_id)
@@ -41,12 +61,7 @@ def remind(message, text):
                         added_chan=data['channel'],
                         message=text,
                         remind_time=arrow.utcnow().datetime))
-    print([r.message for r in get_reminders(unique_id)])
 
-
-db_add_row(Reminder(added_user='nulleffortU5GPFNFP0',
-                    added_time=arrow.utcnow().datetime,
-                    added_chan='test_chan',
-                    message='hard-coded reminder',
-                    remind_time=arrow.utcnow().datetime))
-
+    messages = get_reminders(unique_id)
+    print([m for m in messages])
+    # return message.send([r.message for r in get_reminders(unique_id)])
