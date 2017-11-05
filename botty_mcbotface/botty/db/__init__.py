@@ -2,10 +2,11 @@ import asyncio
 import concurrent.futures
 import os
 from botty_mcbotface.botty.api import get_all_channels, get_all_users
-from sqlalchemy import create_engine, Column, String
-from sqlalchemy.orm import Query, relationship, scoped_session, sessionmaker
+from sqlalchemy import create_engine, insert
+from sqlalchemy.orm import Query, scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import MetaData
+from time import sleep
 
 
 class BottyDB:
@@ -43,9 +44,11 @@ Base.metadata.create_all(bind=db.engine)
 
 
 def db_add_row(row):
-    session.add(row)
-    session.commit()
-    session.close()
+    sess = db.session()
+    sess.merge(row)
+    sess.commit()
+    sess.close()
+    # sess.execute(insert(row, prefixes=['OR IGNORE']))
 
 
 def populate_channels():
@@ -73,15 +76,26 @@ loop = asyncio.get_event_loop()
 
 @asyncio.coroutine
 def populate_periodic():
-    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
-        futures = [loop.run_in_executor(executor, fn) for fn in [populate_channels, populate_users]]
+    # while True:
+    print('populate_periodic::RUNNING')
 
+    tasks = [populate_channels, populate_users]
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+        futures = [loop.run_in_executor(executor, t) for t in tasks]
         yield from asyncio.gather(*futures)
+        print('populate_periodic::SLEEP')
+        yield from asyncio.sleep(15)
+        yield from populate_periodic()
 
 
 loop.run_until_complete(populate_periodic())
 
 print('DB_INIT::finished')
-populate_channels()
-populate_users()
+# print('sleeping...')
+# sleep(5)
+# loop.run_until_complete(populate_periodic())
+#
+# populate_channels()
+# populate_users()
 

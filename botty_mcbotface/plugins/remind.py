@@ -5,18 +5,18 @@ from botty_mcbotface.botty.api import get_user_name_by_id
 from botty_mcbotface.botty.db import db_add_row, session, User
 from slackbot.bot import listen_to, re
 
-db_add_row(Reminder(added_user='nulleffortU5GPFNFP0',
-                    added_time=arrow.utcnow().datetime,
-                    added_chan='test_chan',
-                    message='hard-coded reminder',
-                    remind_time=arrow.utcnow().datetime))
-
-# delete_user = db.metadata.tables['users'].delete().where(User.id == 'nulleffortU5GPFNFP0')
-delete_user = session.query(User).get('nulleffortU5GPFNFP0')
-session.delete(delete_user)
-
-session.commit()
-session.close()
+# db_add_row(Reminder(added_user='nulleffortU5GPFNFP0',
+#                     added_time=arrow.utcnow().datetime,
+#                     added_chan='test_chan',
+#                     message='hard-coded reminder',
+#                     remind_time=arrow.utcnow().datetime))
+#
+# # delete_user = db.metadata.tables['users'].delete().where(User.id == 'nulleffortU5GPFNFP0')
+# delete_user = session.query(User).get('nulleffortU5GPFNFP0')
+# session.delete(delete_user)
+#
+# session.commit()
+# session.close()
 
 
 def get_reminders(u_id):
@@ -42,6 +42,7 @@ def remind(message, text):
     :param text:
     :return:
     """
+    print('REMIND')
     data = message._body
     u_id = data['user']
     u_name = get_user_name_by_id(u_id)
