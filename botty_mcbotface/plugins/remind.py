@@ -1,25 +1,9 @@
 import arrow
 import asyncio
+from botty_mcbotface.botty.db.models.remind import Reminder
 from botty_mcbotface.botty.api import get_user_name_by_id
-from botty_mcbotface.botty.db import db, db_add_row, User
-from sqlalchemy import Column, DateTime, ForeignKey, String
-from sqlalchemy.orm import relationship
+from botty_mcbotface.botty.db import db_add_row, session, User
 from slackbot.bot import listen_to, re
-
-
-class Reminder(db.base):
-    __tablename__ = 'reminders'
-
-    added_user = Column(String(32), ForeignKey(User.id), primary_key=True)
-    added_time = Column(DateTime, primary_key=True)
-    added_chan = Column(String(50))
-    message = Column(String(512))
-    remind_time = Column(DateTime)
-
-    users = relationship(User, backref='reminders')
-
-
-Reminder.__table__.create(db.engine)
 
 db_add_row(Reminder(added_user='nulleffortU5GPFNFP0',
                     added_time=arrow.utcnow().datetime,
@@ -34,7 +18,7 @@ def get_reminders(u_id):
     :param u_id:
     :return:
     """
-    user = db.session.query(User).get(u_id)
+    user = session.query(User).get(u_id)
     print('user by id: ', user.slack_name)
 
     reminders = user.reminders
