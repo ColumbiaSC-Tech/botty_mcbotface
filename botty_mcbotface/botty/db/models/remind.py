@@ -6,6 +6,7 @@ print('DEBUG::IMPORTED')
 
 
 class Reminder(Base):
+    """Table for Reminder plugin (plugins/reminder.py)"""
     __tablename__ = 'reminders'
 
     added_user = Column(String(32), ForeignKey('users.id'), primary_key=True)

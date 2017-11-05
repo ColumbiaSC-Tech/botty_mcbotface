@@ -1,7 +1,7 @@
 import os
 from botty_mcbotface.botty.api import get_all_channels, get_all_users
 from sqlalchemy import create_engine, Column, String
-from sqlalchemy.orm import relationship, scoped_session, sessionmaker
+from sqlalchemy.orm import Query, relationship, scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import MetaData
 
@@ -11,10 +11,11 @@ class BottyDB:
 
     def __init__(self):
         self.engine = create_engine('sqlite:///botty.db')
-        self.factory = sessionmaker(bind=self.engine)
+        self.factory = sessionmaker(bind=self.engine, query_cls=Query)
         self.session = scoped_session(self.factory)
         self.metadata = MetaData()
         self.base = declarative_base(metadata=self.metadata, bind=self.engine)
+        self.base.query = self.session.query_property(query_cls=Query)
 
 
 #####################################
