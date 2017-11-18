@@ -14,6 +14,3 @@ class Reminder(Base):
     remind_time = Column(DateTime)
 
     users = relationship('User', backref=backref('reminders', cascade='all, delete-orphan'))
-
-
-# Reminder.__table__.create(db.engine)
