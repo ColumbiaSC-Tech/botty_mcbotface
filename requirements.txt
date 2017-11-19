@@ -1,3 +1,4 @@
+APScheduler==3.4.0
 arrow==0.10.0
 beautifulsoup4==4.6.0
 bs4==0.0.1
@@ -15,5 +16,6 @@ six==1.10.0
 slackbot==0.5.1
 slacker==0.9.60
 SQLAlchemy==1.1.14
+tzlocal==1.4
 urllib3==1.22
 websocket-client==0.44.0

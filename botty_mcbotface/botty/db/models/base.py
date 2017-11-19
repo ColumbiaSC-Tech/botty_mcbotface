@@ -18,7 +18,7 @@ class User(Base):
 
     # Slack user ID's aren't guaranteed to be unique for identification.
     # Format used is slack_name + slack_id (i.e. 'dannyU87GH7A' ).
-    id = Column(String(16), primary_key=True)
+    id = Column(String(38), primary_key=True)
     slack_id = Column(String(16))
-    slack_name = Column(String(16))
+    slack_name = Column(String(22))
 

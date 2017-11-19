@@ -26,6 +26,7 @@ setup(name='botty_mcbotface',
           'Programming Language :: Python :: 3.5',
       ],
       install_requires=[
+          'apscheduler',
           'arrow',
           'bs4',
           'cchardet',
