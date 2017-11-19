@@ -1,13 +1,12 @@
 import asyncio
 import concurrent.futures
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from botty_mcbotface.botty.api import get_all_channels, get_all_users
 from botty_mcbotface.botty.db import db_add_row, db_merge_row, Channel, User
 
 
 def populate_channels():
     """Retrieves all public channels for a Slack team and merges new members to Channels table."""
-
+    return True
     chans = get_all_channels().body['channels']
 
     for c in chans:
@@ -17,7 +16,7 @@ def populate_channels():
 
 def populate_users():
     """Retrieves all users for a Slack team and merges new members to Users table."""
-
+    return True
     users = get_all_users().body['members']
 
     for u in users:
@@ -32,30 +31,21 @@ def populate_users():
 
 # Async/MultiThread searching all channels
 @asyncio.coroutine
-def populate_periodic(_loop):
+def routine_populate_db(_loop):
     """
     Async periodic task to keep db Channels and Users tables up to date.
     :param _loop: Routine delegated asyncio event loop.
     :return:
     """
-    print('populate_periodic::RUNNING')
+    print('routine_populate_db::RUNNING')
 
     tasks = [populate_channels, populate_users]
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=len(tasks))
-    # print(executor.__dict__)
 
     def periodic(loop):
         with executor:
             futures = [loop.run_in_executor(executor, t) for t in tasks]
             yield from asyncio.gather(*futures)
-            print('populate_periodic::SLEEP')
-            # TODO: Implement scheduler for this task
-            # try:
-            #     yield from sleep(15)
-            # except Exception as e:
-            #     return print('SLEEP_EXCEPTION', e)
-
-            # yield from periodic(loop, sleep)
 
     yield from periodic(_loop)
 
