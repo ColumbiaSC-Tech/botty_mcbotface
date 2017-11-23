@@ -3,6 +3,8 @@ import concurrent.futures
 from botty_mcbotface.botty.api import get_all_channels, get_all_users
 from botty_mcbotface.botty.db import db_add_row, db_merge_row, Channel, User
 
+INTERVAL = 15
+
 
 def populate_channels():
     """Retrieves all public channels for a Slack team and merges new members to Channels table."""
