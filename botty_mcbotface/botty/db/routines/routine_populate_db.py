@@ -39,7 +39,7 @@ def routine_populate_db(_loop):
     :param _loop: Routine delegated asyncio event loop.
     :return:
     """
-    print('routine_populate_db::RUNNING')
+    # print('routine_populate_db::RUNNING')
 
     tasks = [populate_channels, populate_users]
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=len(tasks))
@@ -49,5 +49,5 @@ def routine_populate_db(_loop):
             futures = [loop.run_in_executor(executor, t) for t in tasks]
             yield from asyncio.gather(*futures)
 
-    yield from periodic(_loop)
-
+    # yield from periodic(_loop)
+    return periodic(_loop)

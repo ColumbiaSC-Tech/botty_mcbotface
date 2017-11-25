@@ -11,7 +11,7 @@ def routine_test(_loop):
     :param _loop: Routine delegated asyncio event loop.
     :return:
     """
-    print('routine_test::RUNNING')
+    # print('routine_test::RUNNING')
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
     # print(executor.__dict__)
@@ -22,4 +22,4 @@ def routine_test(_loop):
             futures = [loop.run_in_executor(executor, t) for t in tasks]
             yield from asyncio.gather(*futures)
 
-    yield from periodic(_loop)
+    return periodic(_loop)
