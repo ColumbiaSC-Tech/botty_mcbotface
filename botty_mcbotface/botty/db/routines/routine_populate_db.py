@@ -4,12 +4,12 @@ from botty_mcbotface import log
 from botty_mcbotface.botty.api import get_all_channels, get_all_users
 from botty_mcbotface.botty.db import db_add_row, db_merge_row, Channel, User
 
-INTERVAL = 15
+# Time interval the routine should run on.
+INTERVAL = 60
 
 
 def populate_channels():
     """Retrieves all public channels for a Slack team and merges new members to Channels table."""
-    return True
     chans = get_all_channels().body['channels']
 
     for c in chans:
@@ -19,7 +19,6 @@ def populate_channels():
 
 def populate_users():
     """Retrieves all users for a Slack team and merges new members to Users table."""
-    return True
     users = get_all_users().body['members']
 
     for u in users:
@@ -32,7 +31,6 @@ def populate_users():
             db_merge_row(User(id=_id, slack_id=s_id, slack_name=s_name))
 
 
-# Async/MultiThread searching all channels
 @asyncio.coroutine
 def routine_populate_db(_loop):
     """
@@ -40,7 +38,7 @@ def routine_populate_db(_loop):
     :param _loop: Routine delegated asyncio event loop.
     :return:
     """
-    # log.info('routine_populate_db::RUNNING')
+    log.info('routine_populate_db::RUNNING')
 
     tasks = [populate_channels, populate_users]
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=len(tasks))
@@ -50,5 +48,4 @@ def routine_populate_db(_loop):
             futures = [loop.run_in_executor(executor, t) for t in tasks]
             yield from asyncio.gather(*futures)
 
-    # yield from periodic(_loop)
     return periodic(_loop)

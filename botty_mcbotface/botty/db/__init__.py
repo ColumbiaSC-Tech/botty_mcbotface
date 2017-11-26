@@ -5,12 +5,15 @@ from sqlalchemy.orm import Query, scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import MetaData
 
+DB_NAME = 'botty.db'
+DB_URI = 'sqlite:///botty.db'
+
 
 class BottyDB:
     """Application global database for plugin use"""
 
     def __init__(self):
-        self.engine = create_engine('sqlite:///botty.db')
+        self.engine = create_engine(DB_URI)
         self.factory = sessionmaker(bind=self.engine, query_cls=Query)
         self.session = scoped_session(self.factory)
         self.metadata = MetaData()
@@ -22,10 +25,9 @@ class BottyDB:
 
 # FIXME: For testing only.
 # Once baseline relationships are established use Alembic
-db_name = 'botty.db'
-if os.path.exists(db_name):
-    os.remove(db_name)
-    log.info('REMOVED::%s', db_name)
+if os.path.exists(DB_NAME):
+    os.remove(DB_NAME)
+    log.info('REMOVED::%s', DB_NAME)
 
 # Instantiate db
 db = BottyDB()
@@ -39,14 +41,20 @@ from botty_mcbotface.botty.db.models import *
 # *** Common DB Functions *** #
 
 def db_add_row(row):
-    sess = db.session()
-    sess.add(row)
-    sess.commit()
-    sess.close()
+    try:
+        sess = db.session()
+        sess.add(row)
+        sess.commit()
+        sess.close()
+    except Exception as e:
+        log.error('An error occurred while adding a row: %s', e)
 
 
 def db_merge_row(row):
-    sess = db.session()
-    sess.merge(row)
-    sess.commit()
-    sess.close()
+    try:
+        sess = db.session()
+        sess.merge(row)
+        sess.commit()
+        sess.close()
+    except Exception as e:
+        log.error('An error occurred while merging a row: %s', e)

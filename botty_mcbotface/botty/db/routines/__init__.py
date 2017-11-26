@@ -57,7 +57,7 @@ def task_queue_scheduler():
     """
     for r in get_default_routines():
         routine = getattr(import_module('.'.join([__name__, r])), str(r))
-        interval = getattr(import_module('.'.join([__name__, 'INTERVAL'])), str(r))
+        interval = getattr(import_module('.'.join([__name__, r])), 'INTERVAL')
 
         # TODO: Make an accessible interval property on routine modules
         scheduler.add_job(spawn_task_thread, 'interval', args=(routine,), seconds=interval)
