@@ -1,12 +1,9 @@
-import logging
 import os
+from botty_mcbotface import log
 from sqlalchemy import create_engine, insert
 from sqlalchemy.orm import Query, scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import MetaData
-
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
 
 
 class BottyDB:
@@ -30,7 +27,7 @@ class BottyDB:
 db_name = 'botty.db'
 if os.path.exists(db_name):
     os.remove(db_name)
-    print('REMOVED::', db_name)
+    log.info('REMOVED::{}'.format(db_name))
 
 # Instantiate db
 db = BottyDB()
@@ -44,6 +41,8 @@ from botty_mcbotface.botty.db.models import *
 #####################################
 #        Common DB Functions        #
 #####################################
+
+
 def db_add_row(row):
     sess = db.session()
     sess.add(row)

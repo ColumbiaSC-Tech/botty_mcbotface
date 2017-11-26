@@ -1,5 +1,6 @@
 import asyncio
 import concurrent.futures
+from botty_mcbotface import log
 from botty_mcbotface.botty.api import get_all_channels, get_all_users
 from botty_mcbotface.botty.db import db_add_row, db_merge_row, Channel, User
 
@@ -39,7 +40,7 @@ def routine_populate_db(_loop):
     :param _loop: Routine delegated asyncio event loop.
     :return:
     """
-    # print('routine_populate_db::RUNNING')
+    log.info('routine_populate_db::RUNNING')
 
     tasks = [populate_channels, populate_users]
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=len(tasks))

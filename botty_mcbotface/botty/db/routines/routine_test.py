@@ -1,6 +1,7 @@
 # Testing routine/task-queue overeager threading
 import asyncio
 import concurrent.futures
+from botty_mcbotface import log
 
 
 # Async/MultiThread searching all channels
@@ -11,7 +12,7 @@ def routine_test(_loop):
     :param _loop: Routine delegated asyncio event loop.
     :return:
     """
-    # print('routine_test::RUNNING')
+    log.info('routine_test::RUNNING')
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
     # print(executor.__dict__)

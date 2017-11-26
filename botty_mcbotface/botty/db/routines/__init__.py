@@ -1,8 +1,8 @@
 import os
-import logging
 import re
 import threading
 from apscheduler.schedulers.background import BackgroundScheduler
+from botty_mcbotface import log
 from botty_mcbotface.utils.tools import WorkThread
 from importlib import import_module
 
@@ -13,7 +13,10 @@ scheduler = BackgroundScheduler(daemon=False)
 
 
 def get_default_routines():
-    # Create task queue from routines in routines dir.
+    """
+    Create task queue from routines in routines dir.
+    :return: A list of routine module/function pair names
+    """
     r_match = re.compile('^routine_')
     r_path = os.listdir(__name__.replace('.', '/'))
     routines = [r.split('.py')[0] for r in r_path if r_match.match(r)]
@@ -25,16 +28,25 @@ def get_default_routines():
 #######################
 
 def spawn_task_thread(routine):
-    logging.info('Jobs::{}'.format(scheduler.get_jobs()))
-    logging.info('Threads::{}'.format(len(threading.enumerate())))
+    """
+    Utility function for dynamically generating WorkerThread's for registered routines.
+    :param routine: Name of routine module/function to generate a worker for.
+    :return: The run function for the newly created worker thread.
+    """
+    log.info('Jobs::{}'.format(scheduler.get_jobs()))
+    log.info('Threads::{}'.format(len(threading.enumerate())))
     work = WorkThread(task=routine)
     return work.run
 
 
 def task_queue_scheduler():
+    """
+    Manages the creation of worker threads and their schedules.
+    :return:
+    """
     for r in get_default_routines():
         routine = getattr(import_module('.'.join([__name__, r])), r)
-        print('ROUTINE::', routine)
+        log.info('ROUTINE::{}'.format(routine.__name__))
 
         # TODO: Make an accessible interval property on routine modules
         scheduler.add_job(spawn_task_thread, 'interval', args=(routine,), seconds=5)

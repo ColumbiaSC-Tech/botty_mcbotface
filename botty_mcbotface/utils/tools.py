@@ -1,11 +1,9 @@
 import asyncio
-import logging
 import requests
 import threading
-from random import choice
+from botty_mcbotface import log
 from bs4 import BeautifulSoup
-
-log = logging.getLogger()
+from random import choice
 
 
 # *** Custom Threading Classes *** #
