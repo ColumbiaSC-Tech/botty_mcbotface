@@ -40,7 +40,7 @@ def routine_populate_db(_loop):
     :param _loop: Routine delegated asyncio event loop.
     :return:
     """
-    log.info('routine_populate_db::RUNNING')
+    # log.info('routine_populate_db::RUNNING')
 
     tasks = [populate_channels, populate_users]
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=len(tasks))

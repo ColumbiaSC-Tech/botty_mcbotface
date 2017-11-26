@@ -18,16 +18,14 @@ class BottyDB:
         self.base.query = self.session.query_property(query_cls=Query)
 
 
-#####################################
-#    DB Initialization Functions    #
-#####################################
+# *** DB Initialization Functions *** #
 
 # FIXME: For testing only.
 # Once baseline relationships are established use Alembic
 db_name = 'botty.db'
 if os.path.exists(db_name):
     os.remove(db_name)
-    log.info('REMOVED::{}'.format(db_name))
+    log.info('REMOVED::%s', db_name)
 
 # Instantiate db
 db = BottyDB()
@@ -38,10 +36,7 @@ session = db.session()
 from botty_mcbotface.botty.db.models import *
 
 
-#####################################
-#        Common DB Functions        #
-#####################################
-
+# *** Common DB Functions *** #
 
 def db_add_row(row):
     sess = db.session()

@@ -3,8 +3,21 @@ import re
 import threading
 from apscheduler.schedulers.background import BackgroundScheduler
 from botty_mcbotface import log
-from botty_mcbotface.utils.tools import WorkThread
+from botty_mcbotface.utils.tools import AsyncWorkThread
 from importlib import import_module
+
+"""
+In order for routines to be registered properly the 
+following naming conventions must be followed:
+
+* The routine filename should start with "routine_".
+
+* The routine file should have only one routine to run.
+
+* The name of the routine function should be the same as the .py filename.
+
+(See routine_populate_db.py for an example)
+"""
 
 # Main scheduler instantiation
 scheduler = BackgroundScheduler(daemon=False)
@@ -20,12 +33,11 @@ def get_default_routines():
     r_match = re.compile('^routine_')
     r_path = os.listdir(__name__.replace('.', '/'))
     routines = [r.split('.py')[0] for r in r_path if r_match.match(r)]
+
     return routines
 
 
-#######################
-#   Main task queue   #
-#######################
+# *** Main task queue *** #
 
 def spawn_task_thread(routine):
     """
@@ -33,9 +45,8 @@ def spawn_task_thread(routine):
     :param routine: Name of routine module/function to generate a worker for.
     :return: The run method for the newly created worker thread.
     """
-    log.info('Jobs::{}'.format(scheduler.get_jobs()))
-    log.info('Threads::{}'.format(len(threading.enumerate())))
-    work = WorkThread(task=routine)
+    work = AsyncWorkThread(task=routine)
+
     return work.run
 
 
@@ -46,10 +57,10 @@ def task_queue_scheduler():
     """
     for r in get_default_routines():
         routine = getattr(import_module('.'.join([__name__, r])), r)
-        log.info('ROUTINE::{}'.format(routine.__name__))
 
         # TODO: Make an accessible interval property on routine modules
         scheduler.add_job(spawn_task_thread, 'interval', args=(routine,), seconds=5)
+        log.info('Registered routine: %s', routine.__name__)
 
     main_work_thread = threading.Thread(target=scheduler.start, daemon=True)
     main_work_thread.run()

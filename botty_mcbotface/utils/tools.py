@@ -7,39 +7,34 @@ from random import choice
 
 
 # *** Custom Threading Classes *** #
-class WorkThread(object):
-    """ Threading example class
-    The run() method will be started and it will run in the background
-    until the application exits.
-    """
 
+class AsyncWorkThread(object):
+    """
+    Custom Thread class that accepts functions to run async in
+    event loop in a new thread.
+
+    This thread has only one job (to run the given task) and is
+    then managed by APScheduler parent thread.
+    """
     def __init__(self, task, daemon=False):
-        """ Constructor
-        :type interval: int
-        :param interval: Check interval, in seconds
         """
-        self.task = task
-        self._stop_event = threading.Event()
-        self.thread = threading.Thread(target=self.run)
+        :param task: Properly formatted routine to run async in thread.
+        :param daemon: Boolean indicating the worker thread is daemon or not.
+        """
+        self.thread = threading.Thread(target=self.run, args=(task,), daemon=daemon)
         self.thread.daemon = daemon
         self.thread.start()
 
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()
-
-    def run(self):
-        """ Method that runs forever """
-        if not self.stopped():
-            # log.info('WORK_THREAD::STARTING_WORK::{}'.format(self.task))
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            loop.run_until_complete(self.task(loop))
-            loop.close()
-            # log.info('WORK_THREAD::FINISHED_WORK::{}'.format(self.task))
-            return self.stop()
+    @staticmethod
+    def run(task):
+        """
+        Set, start then close the async task event loop.
+        :param task: Task to run
+        """
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(task(loop))
+        loop.close()
 
 
 # *** General Helper Functions *** #
