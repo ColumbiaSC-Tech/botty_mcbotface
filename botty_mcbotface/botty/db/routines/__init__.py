@@ -22,7 +22,7 @@ following naming conventions must be followed:
 # Main scheduler instantiation
 scheduler = BackgroundScheduler(daemon=False)
 
-# TODO: Explain routine naming convention. Also move this to run.py and have task_queue_scheduler accept routines and interval
+# TODO: Have task_queue_scheduler accept routines and interval
 
 
 def get_default_routines():
@@ -43,7 +43,7 @@ def spawn_task_thread(routine):
     """
     Utility function for dynamically generating WorkerThread's for registered routines.
     :param routine: Name of routine module/function to generate a worker for.
-    :return: The run method for the newly created worker thread.
+    :return: The `run` method for the newly created worker thread.
     """
     work = AsyncWorkThread(task=routine)
 
@@ -56,10 +56,11 @@ def task_queue_scheduler():
     :return:
     """
     for r in get_default_routines():
-        routine = getattr(import_module('.'.join([__name__, r])), r)
+        routine = getattr(import_module('.'.join([__name__, r])), str(r))
+        interval = getattr(import_module('.'.join([__name__, 'INTERVAL'])), str(r))
 
         # TODO: Make an accessible interval property on routine modules
-        scheduler.add_job(spawn_task_thread, 'interval', args=(routine,), seconds=5)
+        scheduler.add_job(spawn_task_thread, 'interval', args=(routine,), seconds=interval)
         log.info('Registered routine: %s', routine.__name__)
 
     main_work_thread = threading.Thread(target=scheduler.start, daemon=True)
