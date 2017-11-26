@@ -31,7 +31,7 @@ def spawn_task_thread(routine):
     """
     Utility function for dynamically generating WorkerThread's for registered routines.
     :param routine: Name of routine module/function to generate a worker for.
-    :return: The run function for the newly created worker thread.
+    :return: The run method for the newly created worker thread.
     """
     log.info('Jobs::{}'.format(scheduler.get_jobs()))
     log.info('Threads::{}'.format(len(threading.enumerate())))

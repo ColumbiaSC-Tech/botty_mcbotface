@@ -33,12 +33,12 @@ class WorkThread(object):
     def run(self):
         """ Method that runs forever """
         if not self.stopped():
-            log.info('WORK_THREAD::STARTING_WORK::{}'.format(self.task))
+            # log.info('WORK_THREAD::STARTING_WORK::{}'.format(self.task))
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
             loop.run_until_complete(self.task(loop))
             loop.close()
-            log.info('WORK_THREAD::FINISHED_WORK::{}'.format(self.task))
+            # log.info('WORK_THREAD::FINISHED_WORK::{}'.format(self.task))
             return self.stop()
 
 
