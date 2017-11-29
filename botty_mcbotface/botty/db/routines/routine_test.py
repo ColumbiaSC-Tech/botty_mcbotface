@@ -3,7 +3,8 @@ import asyncio
 import concurrent.futures
 from botty_mcbotface import log
 
-INTERVAL = 1
+INTERVAL = 25
+
 
 # Async/MultiThread searching all channels
 @asyncio.coroutine

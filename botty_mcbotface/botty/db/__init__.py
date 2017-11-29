@@ -13,10 +13,10 @@ class BottyDB:
     """Application global database for plugin use"""
 
     def __init__(self):
+        self.metadata = MetaData()
         self.engine = create_engine(DB_URI)
         self.factory = sessionmaker(bind=self.engine, query_cls=Query)
         self.session = scoped_session(self.factory)
-        self.metadata = MetaData()
         self.base = declarative_base(metadata=self.metadata, bind=self.engine)
         self.base.query = self.session.query_property(query_cls=Query)
 

@@ -50,17 +50,40 @@ def spawn_task_thread(routine):
     return work.run
 
 
-def task_queue_scheduler():
+def register_routine(routine, interval):
     """
-    Manages the creation of worker threads and their schedules.
+    Adds a new routine to the scheduler. This can be done at any time before, during,
+    or after the scheduler has started.
+    :param routine: Function to run at a given time interval.
+    :param interval: The interval (seconds) at which to run the function.
     :return:
     """
+    return scheduler.add_job(spawn_task_thread, 'interval', args=(routine,), seconds=interval)
+
+
+def bot_routine(interval):
+    print(interval)
+
+    def decorator(func):
+        print(func)
+
+        def wrapper():
+            print('wrapper')
+            # print(*args)
+            # print(**kwargs)
+            return register_routine(func, interval)
+        return wrapper()
+    return decorator
+
+
+def task_queue_scheduler():
+    """Manages the creation of routine worker threads and their schedules."""
     for r in get_default_routines():
         routine = getattr(import_module('.'.join([__name__, r])), str(r))
         interval = getattr(import_module('.'.join([__name__, r])), 'INTERVAL')
 
         # TODO: Make an accessible interval property on routine modules
-        scheduler.add_job(spawn_task_thread, 'interval', args=(routine,), seconds=interval)
+        register_routine(routine, interval)
         log.info('Registered routine: %s', routine.__name__)
 
     main_work_thread = threading.Thread(target=scheduler.start, daemon=True)
