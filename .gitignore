@@ -4,7 +4,7 @@ run.py
 run_test.py
 slackbot_settings.py
 slackbot_test_settings.py
-botty.db
+botty_db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

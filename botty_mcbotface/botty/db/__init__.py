@@ -5,7 +5,7 @@ from sqlalchemy.orm import Query, scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import MetaData
 
-DB_NAME = 'botty.db'
+DB_NAME = 'botty_db'
 DB_URI = 'sqlite:///botty.db'
 
 
