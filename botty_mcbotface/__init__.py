@@ -14,13 +14,15 @@ def init_db():
     """Setup database and db routines/task-queue"""
 
     from botty_mcbotface.botty.db import Base, db
-    from botty_mcbotface.botty.db.routines import task_queue_scheduler
 
     # Initialize db
     Base.metadata.create_all(bind=db.engine)
 
+    from botty_mcbotface.tasq_runner import start_tasq
+    import botty_mcbotface.botty.db.routines
+
     # Start the default task queue
-    task_queue_scheduler()
+    start_tasq()
 
 
 init_db()
