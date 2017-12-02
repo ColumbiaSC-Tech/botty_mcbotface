@@ -2,7 +2,13 @@ import arrow
 from botty_mcbotface.botty.api import get_user_name_by_id
 from botty_mcbotface.botty.db import session, db_add_row, User
 from botty_mcbotface.botty.db.models.remind import Reminder
+from botty_mcbotface.tasq_runner import bot_routine
 from slackbot.bot import listen_to, re
+
+
+# @bot_routine(1)
+# def test_remind():
+#     print('test-remind')
 
 
 def get_reminders(u_id):

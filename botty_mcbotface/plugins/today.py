@@ -1,6 +1,8 @@
+from botty_mcbotface.utils.tools import get_html
 from slackbot.bot import listen_to, re
 from datetime import datetime
 from pytz import timezone
+from pprint import pprint
 import feedparser
 
 
@@ -13,11 +15,13 @@ def today(message):
     """
     east_tz = timezone('US/Eastern')
     _today = datetime.now(east_tz).strftime("%A, %B %d, %Y.")
-    msg = "Today is {}\nToday's Holidays:\n".format(_today)
+    msg = "_{}_\n*Today's Holidays:*\n".format(_today)
 
-    holidays = feedparser.parse("https://www.checkiday.com/rss.php?tz=America/New_York")
+    holidays = get_html("https://www.checkiday.com/rss.php?tz=America/New_York").find_all('title')
 
-    for holiday in holidays.entries:
-        msg += holiday.title + "\n"
+    for holiday in holidays:
+        if 'checkiday.com' in holiday.text.lower():
+            continue
+        msg += '• {}\n'.format(holiday.text)
 
     return message.send(msg)
