@@ -2,8 +2,6 @@ from botty_mcbotface.utils.tools import get_html
 from slackbot.bot import listen_to, re
 from datetime import datetime
 from pytz import timezone
-from pprint import pprint
-import feedparser
 
 
 @listen_to('^.today', re.IGNORECASE)
