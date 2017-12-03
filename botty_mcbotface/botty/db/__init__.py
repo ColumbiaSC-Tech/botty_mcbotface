@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import MetaData
 
 DB_NAME = 'botty_db'
-DB_URI = 'sqlite:///botty.db'
+DB_URI = 'sqlite:///botty_db'
 
 
 class BottyDB:

@@ -4,9 +4,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from asyncio import coroutines, new_event_loop, set_event_loop
 
 # TODO: Factor out of botty to separate lib and setup logging.
-"""
-Thread-Async-Scheduler-Queue(runner)
-"""
 
 # Main scheduler instantiation
 scheduler = BackgroundScheduler(daemon=False)
@@ -43,14 +40,14 @@ class AsyncWorkThread(object):
         loop.close()
 
 
-def start_tasq():
+def start_task_runner():
     """Starts the scheduler by delegating it to a daemon thread."""
     main_work_thread = threading.Thread(target=scheduler.start, daemon=True)
     main_work_thread.run()
 
 
-def stop_tasq():
-    """Stops the tasq-runner, scheduler and task threads."""
+def stop_task_runner():
+    """Stops the task-runner, scheduler and task threads."""
     scheduler.shutdown()
 
 
@@ -86,7 +83,7 @@ def bot_routine(interval, delay=True):
     def decorator(func):
         def wrapper(*args, **kwargs):
             if not delay:
-                coroutines.coroutine(func(*args, **kwargs))
-            return register_routine(interval, coroutines.coroutine(func))
+                AsyncWorkThread.run(coroutines.coroutine(lambda: func(*args, **kwargs)))
+            return register_routine(interval, coroutines.coroutine(lambda: func(*args, **kwargs)))
         return wrapper()
     return decorator

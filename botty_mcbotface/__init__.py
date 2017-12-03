@@ -18,11 +18,11 @@ def init_db():
     # Initialize db
     Base.metadata.create_all(bind=db.engine)
 
-    from botty_mcbotface.tasq_runner import start_tasq
+    from botty_mcbotface.task_runner import start_task_runner
     import botty_mcbotface.botty.db.routines
 
     # Start the default task queue
-    start_tasq()
+    start_task_runner()
 
 
 init_db()
