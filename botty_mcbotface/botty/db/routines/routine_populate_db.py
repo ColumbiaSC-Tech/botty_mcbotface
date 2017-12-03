@@ -25,7 +25,12 @@ def populate_users():
         if not u['deleted']:
             s_id = u['id']
             s_name = u['name']
-
+            is_admin = u['is_admin']
+            is_owner = u['is_owner']
             # Create our custom unique user ID's (slackID + slackUserName)
             _id = s_name + s_id
-            db_merge_row(User(id=_id, slack_id=s_id, slack_name=s_name))
+            db_merge_row(User(id=_id,
+                              slack_id=s_id,
+                              slack_name=s_name,
+                              is_admin=is_admin,
+                              is_owner=is_owner))

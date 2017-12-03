@@ -3,13 +3,9 @@ import logging
 from apscheduler.schedulers.background import BackgroundScheduler
 from asyncio import coroutines, new_event_loop, set_event_loop
 
-# TODO: Factor out of botty to separate lib and setup logging.
-
 # Main scheduler instantiation
 scheduler = BackgroundScheduler(daemon=False)
 
-
-# *** Custom Threading Classes *** #
 
 class AsyncWorkThread(object):
     """
@@ -17,7 +13,7 @@ class AsyncWorkThread(object):
     event loop in a new thread.
 
     This thread has only one job, to run the given task. It is
-    then managed by APScheduler parent thread.
+    then managed by APScheduler parent thread (BackgroundScheduler).
     """
     def __init__(self, task, daemon=False):
         """
@@ -55,7 +51,7 @@ def spawn_task_thread(routine):
     """
     Utility function for dynamically generating WorkerThread's for registered routines.
     :param routine: Name of routine module/function to generate a worker for.
-    :return: The `run` method for the newly created worker thread.
+    :return work.run: The `run` method for the newly created worker thread.
     """
     work = AsyncWorkThread(task=routine)
 
@@ -68,7 +64,7 @@ def register_routine(interval, routine):
     or after the scheduler has started.
     :param routine: Function to run at a given time interval.
     :param interval: The interval (seconds) at which to run the function.
-    :return:
+    :return scheduler.add_job(*):
     """
     return scheduler.add_job(spawn_task_thread, 'interval', args=(routine,), seconds=interval)
 
