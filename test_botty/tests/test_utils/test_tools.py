@@ -24,6 +24,7 @@ class TestTools(TestCase):
             assert_is_instance(tools.soup(html), BeautifulSoup)
 
     def test_get_html_returns_soup_html(self):
+        """Test get_html returns soup html object"""
         with requests_mock.Mocker() as m:
             with open(self.test_html) as html:
                 m.get('http://test.com', text=str(html))
