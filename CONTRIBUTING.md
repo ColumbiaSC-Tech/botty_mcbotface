@@ -111,8 +111,8 @@ PLUGINS = [
 ```
 
 **Important note:** The bot token can be obtained by adding a custom bot
-integration in Slack. User tokens can be obtained at
-https://api.slack.com/docs/oauth-test-tokens. Slack tokens are like passwords!
+integration in Slack. User tokens can be obtained [here](https://api.slack.com/docs/oauth-test-tokens).
+Slack tokens are like passwords!
 Don't commit them. If you're using them in some kind of Github or Travis automation,
 ensure they are for Slacks that are only for testing.
 
@@ -167,13 +167,54 @@ class TestSearches(TestCase):
         mock_response = MockRequestGET(html_path)
         mock_get_html.return_value = mock_response
 
-        # Call main method
+        # Call main function to test
         first_result = google(mock_message, 'testing')
 
         assert_equals('http://istqbexamcertification.com/what-is-software-testing/', first_result)
 
 ```
 
-### Plugins
+For more examples on how to write unit tests checkout the pre-written tests
+in the [`test_botty`](https://github.com/ColumbiaSC-Tech/botty_mcbotface/tree/develop/test_botty)
+directory.
+
+### Plugins & API
 
 Finally, the fun stuff.
+
+#### • Plugins
+
+Plugins are still generally written the same way as describe in the slackbot
+[readme](https://github.com/lins05/slackbot/blob/develop/README.md), however, botty_mcbotface
+does have extra utilities of different types.
+
+#### • botty_mcbotface API
+
+A more detailed documentation of botty_mcbotface will be available soon.
+In the meantime see these modules for available API functions.
+
+• Simple data text files can be stored in `botty_mcbotface.data`
+
+• Database models can be added in `botty_mcbotface.botty.db.models`
+
+• Some additional slack API functions can be found in `botty_mcbotface`
+such as `get_all_channels` and `get_user_message_history`.
+
+• General use functions like `get_html` and `random_response` can be found in
+`botty_mcbotface.utils.tools`
+
+• A scheduled task-runner is available to hook into through the use of a
+decorator. For example:
+
+```
+from botty_mcbotface.task_runner import bot_routine
+
+
+@bot_routine(15, delay=False)
+def some_routine_task_function():
+    print('I\'ll run immediately (no delay) every 15 seconds as an async task in a background thread.')
+
+```
+
+
+Thank you for your contributions!

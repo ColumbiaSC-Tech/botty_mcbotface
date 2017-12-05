@@ -10,7 +10,7 @@ def soup(html):
     """
     Get a BeautifulSoup object from html
     :param html: HTML string
-    :return: BeautifulSoup object
+    :return: BeautifulSoup object.
     """
     bs = BeautifulSoup(html, 'lxml')
 
@@ -21,7 +21,7 @@ def get_html(url):
     """
     Return a BeautifulSoup
     :param url: URL to get HTML from
-    :return: HTML string
+    :return: HTML of requested URL.
     """
     res = requests.get(url)
     s = soup(res.text)
@@ -33,7 +33,7 @@ def random_response(responses):
     """
     Return a random response given a list of responses
     :param responses: List of response strings
-    :return: A random response string
+    :return: A random response string.
     """
     def test_1d(res):
 

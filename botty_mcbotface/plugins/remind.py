@@ -5,7 +5,6 @@ from botty_mcbotface.botty.db.models.remind import Reminder
 from botty_mcbotface.task_runner import bot_routine
 from slackbot.bot import listen_to, re
 
-
 # @bot_routine(1)
 # def test_remind():
 #     print('test-remind')
