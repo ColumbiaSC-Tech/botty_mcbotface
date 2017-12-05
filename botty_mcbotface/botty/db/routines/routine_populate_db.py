@@ -1,6 +1,6 @@
 from botty_mcbotface import log
 from botty_mcbotface.botty.api import get_all_channels, get_all_users
-from botty_mcbotface.botty.db import db_add_row, db_merge_row, Channel, User
+from botty_mcbotface.botty.db import db_merge_row, Channel, User
 from botty_mcbotface.task_runner import bot_routine
 
 

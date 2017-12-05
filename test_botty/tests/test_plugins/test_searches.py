@@ -3,7 +3,7 @@ import warnings
 from nose.tools import assert_equals, assert_in, assert_true
 from unittest import TestCase
 from unittest.mock import patch
-from test_botty.mocks.mocks import MockMessage, Response
+from test_botty.mocks import MockMessage, MockRequestGET
 from botty_mcbotface.plugins.searches import google, youtube
 
 # Short-circuit Message object that just returns results
@@ -29,7 +29,7 @@ class TestSearches(TestCase):
         rel_path = '../../mocks/google_links.html'
         html_path = os.path.join(curr_dir, rel_path)
 
-        mock_response = Response(html_path)
+        mock_response = MockRequestGET(html_path)
         mock_get_html.return_value = mock_response
 
         # Call main method
@@ -46,7 +46,7 @@ class TestSearches(TestCase):
         rel_path = '../../mocks/youtube_links.html'
         html_path = os.path.join(curr_dir, rel_path)
 
-        mock_get_html.return_value = Response(html_path)
+        mock_get_html.return_value = MockRequestGET(html_path)
 
         # Call main method
         first_result = youtube(mock_message, 'testing')

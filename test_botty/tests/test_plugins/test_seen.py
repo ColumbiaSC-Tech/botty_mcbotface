@@ -2,7 +2,7 @@ import warnings
 from nose.tools import assert_in
 from unittest import TestCase
 from unittest.mock import patch
-from test_botty.mocks.mocks import MockMessage, Response
+from test_botty.mocks import MockMessage, MockRequestGET
 from botty_mcbotface.plugins.seen import seen
 
 # Short-circuit Message object that just returns results

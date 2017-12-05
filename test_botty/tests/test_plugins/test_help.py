@@ -1,6 +1,6 @@
 from nose.tools import assert_in
 from unittest import TestCase
-from test_botty.mocks.mocks import MockMessage
+from test_botty.mocks import MockMessage
 from botty_mcbotface.plugins.help import help, help_msg
 
 

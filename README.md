@@ -6,8 +6,10 @@ A [slackbot](https://github.com/lins05/slackbot) plugin that acts as a general p
 Although botty_mcbotface is not sentient, it does display a little sense of humor.
 
 Much inspiration drawn from snoonet's [gonzobot](https://github.com/snoonetIRC/CloudBot) for IRC.
-The main build is from lins05's [slackbot](https://github.com/lins05/slackbot), which botty_mcbotface
-is technically a plugin for (though he himself has a multitude of plugins as well).
+The main build is from lins05's [slackbot](https://github.com/lins05/slackbot), where botty_mcbotface
+is essentially a plugin it as well as a sort of wrapper for with some extra
+built-in features like a taskrunner, database (SQLite3). and a host of
+pre-written plugins to start with.
 
 ## installation
 *For more info on the setup for slackbot (number 2 & 3 below) you can read up [here](https://github.com/lins05/slackbot)*
@@ -38,18 +40,26 @@ is technically a plugin for (though he himself has a multitude of plugins as wel
 3. Create a `run.py` file, this is the main entry point:
     ```
     #!/usr/bin/env python
+    # V1.2.4
     from slackbot.bot import Bot
-    import logging
-    logging.basicConfig()
+    from botty_mcbotface import log
+    from botty_mcbotface.task_runner import stop_task_runner
 
 
     def main():
-        bot = Bot()
-        bot.run()
+        """Start slackbot"""
+        try:
+            bot = Bot()
+            bot.run()
+        except KeyboardInterrupt:
+            log.info('Shutting down...')
+            return stop_task_runner()
+
 
     if __name__ == "__main__":
         main()
     ```
+
 
 4. Run `pip install botty-mcbotface`
 

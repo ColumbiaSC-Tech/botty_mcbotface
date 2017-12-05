@@ -2,7 +2,7 @@
 from nose.tools import assert_in, assert_true, assert_raises
 from unittest import TestCase
 from unittest.mock import patch
-from test_botty.mocks.mocks import MockMessage
+from test_botty.mocks import MockMessage
 
 # Import main functions
 from botty_mcbotface.plugins.flipper import flip, fix

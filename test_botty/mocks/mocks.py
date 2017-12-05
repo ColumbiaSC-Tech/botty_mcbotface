@@ -1,4 +1,4 @@
-class Response:
+class MockRequestGET:
     """
     Mocked GET response for requests.get
     """
