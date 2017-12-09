@@ -7,7 +7,7 @@ from botty_mcbotface.botty import api
 @listen_to('^\.seen (.*)', re.IGNORECASE)
 def seen(message, text):
     """
-    Check the last time a user was seen on Slack.
+    Check the last time a user was seen posting publicly on Slack.
     :param message: Slackbot message object
     :param text: Text to flip
     :return: Message to slack channel

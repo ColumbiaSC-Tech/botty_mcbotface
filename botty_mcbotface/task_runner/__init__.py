@@ -1,5 +1,4 @@
 import threading
-import logging
 from apscheduler.schedulers.background import BackgroundScheduler
 from asyncio import coroutines, new_event_loop, set_event_loop
 from botty_mcbotface import log, bot_tz
@@ -27,7 +26,7 @@ class AsyncWorkThread(object):
         self.thread.start()
 
     @staticmethod
-    def run(task, delay=None, debug=True):
+    def run(task, delay=None, debug=False):
         """
         Set, start then close the async task event loop.
         :param task: Function to run as a scheduled task.
@@ -40,7 +39,6 @@ class AsyncWorkThread(object):
             for job in scheduler.get_jobs():
                 if hasattr(job, 'next_run_time'):
                     log.info(job.next_run_time)
-                    # log.info(job.trigger)
         loop = new_event_loop()
         set_event_loop(loop)
         loop.run_until_complete(task())
@@ -71,10 +69,10 @@ def spawn_task_thread(routine):
 
 def register_routine_cron(interval, routine):
     """
-    Adds a new routine to the scheduler. This can be done at any time before, during,
+    Adds a new cron triggered routine to the scheduler. This can be done at any time before, during,
     or after the scheduler has started.
     :param routine: Function to run at a given time interval.
-    :param interval: The interval (seconds) at which to run the function.
+    :param interval: A dictionary containing keyword arguments for APScheduler cron trigger.
     :return scheduler.add_job(*):
     """
     return scheduler.add_job(spawn_task_thread, 'cron', args=(routine,), **interval)
@@ -82,8 +80,8 @@ def register_routine_cron(interval, routine):
 
 def register_routine_interval(interval, routine):
     """
-    Adds a new routine to the scheduler. This can be done at any time before, during,
-    or after the scheduler has started.
+    Adds a new interval triggered routine to the scheduler. This can be done at any time before,
+    during, or after the scheduler has started.
     :param routine: Function to run at a given time interval.
     :param interval: The interval (seconds) at which to run the function.
     :return scheduler.add_job(*):
@@ -105,7 +103,6 @@ def bot_routine(interval, cron=False, delay=True, run_once=False):
     :return decorator:
     """
     def decorator(func):
-
         def wrapper(*args, **kwargs):
             # wrap the function/task as coroutine
             coro = coroutines.coroutine(lambda: func(*args, **kwargs))
@@ -121,10 +118,7 @@ def bot_routine(interval, cron=False, delay=True, run_once=False):
                 # return before routine is registered
                 return AsyncWorkThread.run(coro)
 
-            if not delay:
-                if cron:
-                    return register_routine_cron(interval, coro)
-
+            if not delay and not cron:
                 # run once immediately before registering with interval
                 AsyncWorkThread.run(coro)
 
