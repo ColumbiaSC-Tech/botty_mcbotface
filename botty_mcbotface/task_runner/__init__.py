@@ -2,6 +2,7 @@ import threading
 import logging
 from apscheduler.schedulers.background import BackgroundScheduler
 from asyncio import coroutines, new_event_loop, set_event_loop
+from time import sleep
 
 # Main scheduler instantiation
 scheduler = BackgroundScheduler(daemon=False)
@@ -25,11 +26,16 @@ class AsyncWorkThread(object):
         self.thread.start()
 
     @staticmethod
-    def run(task):
+    def run(task, delay=None):
         """
         Set, start then close the async task event loop.
         :param task: Function to run as a scheduled task.
+        :param delay: Optional delay in seconds before running task.
         """
+        if delay:
+            print('sleeping')
+            sleep(delay)
+        print('INSIDE RUN')
         loop = new_event_loop()
         set_event_loop(loop)
         loop.run_until_complete(task())
@@ -69,17 +75,31 @@ def register_routine(interval, routine):
     return scheduler.add_job(spawn_task_thread, 'interval', args=(routine,), seconds=interval)
 
 
-def bot_routine(interval, delay=True):
+def bot_routine(interval, delay=True, run_once=False):
     """
     Function decorator to designate function as a task.
     :param interval: Interval in seconds to run the task.
     :param delay: Boolean indicating whether to run task immediately or offset by interval.
+    :param run_once: Boolean indicating whether to run task once or as a routine.
     :return decorator:
     """
     def decorator(func):
+
         def wrapper(*args, **kwargs):
+            coro = coroutines.coroutine(lambda: func(*args, **kwargs))
+
+            if run_once and delay:
+                # return before routine is registered and run coro with a delay
+                return AsyncWorkThread.run(coro, delay=interval)
+
+            if run_once:
+                # return before routine is registered
+                return AsyncWorkThread.run(coro)
+
             if not delay:
-                AsyncWorkThread.run(coroutines.coroutine(lambda: func(*args, **kwargs)))
-            return register_routine(interval, coroutines.coroutine(lambda: func(*args, **kwargs)))
+                # run once immediately before registering with interval
+                AsyncWorkThread.run(coro)
+
+            return register_routine(interval, coro)
         return wrapper()
     return decorator
