@@ -1,7 +1,6 @@
 from slackbot.bot import listen_to, re
 from datetime import datetime
-import pytz
-
+from botty_mcbotface import bot_tz
 from botty_mcbotface.botty import api
 
 
@@ -31,7 +30,7 @@ def seen(message, text):
 
     for msg in messages['messages']['matches']:
         ch = msg['channel']['name']
-        ts = datetime.fromtimestamp(float(msg['ts']), tz=pytz.timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M')
+        ts = datetime.fromtimestamp(float(msg['ts']), tz=bot_tz).strftime('%Y-%m-%d %H:%M')
         m = '@{} was last seen *{}*, in #{} saying:\n> {}'.format(user_name, ts, ch, msg['text'])
 
         return message.send(m)

@@ -1,4 +1,9 @@
 import logging
+from pytz import timezone
+from slackbot_settings import TIMEZONE
+
+# Configure bot timezone
+bot_tz = timezone(TIMEZONE)
 
 # Setup application logger
 logging.basicConfig()

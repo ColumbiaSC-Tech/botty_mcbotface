@@ -6,7 +6,7 @@ from botty_mcbotface.task_runner import bot_routine
 from slackbot.bot import listen_to, re
 
 
-@bot_routine(5, delay=True, run_once=True)
+@bot_routine({'day_of_week': 'mon'}, cron=True, delay=False, run_once=False)
 def test_remind():
     print('test-remind')
 
