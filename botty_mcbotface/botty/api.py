@@ -1,6 +1,7 @@
 import re
 import asyncio
 import concurrent.futures
+from run import bot
 from slackbot_settings import SEEN_PLUGIN_CHANNEL_BLACKLIST as BLACKLIST
 from slackbot_settings import USER_TOKEN
 from slacker import Slacker
@@ -19,6 +20,16 @@ re_user = re.compile(r'<@[A-Z0-9]*>')
 
 
 # *** Slacker API Methods *** #
+
+def send_user_dm(u_id, text):
+    """
+    Open a DM channel and send a message to a user.
+    :param u_id: Id of user to DM
+    :param text: Text to send to user
+    """
+    channel_id = bot._client.webapi.im.open(u_id).body["channel"]["id"]
+    return bot._client.rtm_send_message(channel_id, text)
+
 
 def get_all_channels():
     """

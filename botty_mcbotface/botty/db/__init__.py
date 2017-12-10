@@ -25,14 +25,14 @@ class BottyDB:
 
 # FIXME: For testing only.
 # Once baseline relationships are established use Alembic
-if os.path.exists(DB_NAME):
-    os.remove(DB_NAME)
-    log.info('REMOVED::%s', DB_NAME)
+# if os.path.exists(DB_NAME):
+#     os.remove(DB_NAME)
+#     log.info('REMOVED::%s', DB_NAME)
 
 # Instantiate db
 db = BottyDB()
 Base = db.base
-session = db.session()
+# session = db.session()
 
 # Import models here to avoid circular importing
 from botty_mcbotface.botty.db.models import *
@@ -40,21 +40,38 @@ from botty_mcbotface.botty.db.models import *
 
 # *** Common DB Functions *** #
 
-def db_add_row(row):
+def db_create_row(row):
     try:
-        sess = db.session()
-        sess.add(row)
-        sess.commit()
-        sess.close()
+        # sess = db.session()
+        db.session().add(row)
+        db.session().commit()
+        db.session().close()
     except Exception as e:
-        log.error('An error occurred while adding a row: %s', e)
+        db.session().rollback()
+        log.error('An error occurred while adding row: %s', e)
 
 
-def db_merge_row(row):
+def db_read_row(table, row):
+    return db.session().query(table).get(row)
+
+
+def db_update_row(row):
     try:
-        sess = db.session()
-        sess.merge(row)
-        sess.commit()
-        sess.close()
+        # sess = db.session()
+        db.session().merge(row)
+        db.session().commit()
+        db.session().close()
     except Exception as e:
-        log.error('An error occurred while merging a row: %s', e)
+        db.session().rollback()
+        log.error('An error occurred while merging row: %s', e)
+
+
+def db_delete_row(row):
+    try:
+        # sess = db.session()
+        db.session().delete(row)
+        db.session().commit()
+        db.session().close()
+    except Exception as e:
+        db.session().rollback()
+        log.error('An error occurred while deleting row: %s', e)

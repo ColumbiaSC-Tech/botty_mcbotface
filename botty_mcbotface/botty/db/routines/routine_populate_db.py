@@ -1,6 +1,6 @@
 from botty_mcbotface import log
 from botty_mcbotface.botty.api import get_all_channels, get_all_users
-from botty_mcbotface.botty.db import db_merge_row, Channel, User
+from botty_mcbotface.botty.db import db_update_row, Channel, User
 from botty_mcbotface.task_runner import bot_routine
 
 
@@ -12,7 +12,7 @@ def populate_channels():
 
     for c in chans:
         if not c['is_private']:
-            db_merge_row(Channel(id=c['id'], name=c['name']))
+            db_update_row(Channel(id=c['id'], name=c['name']))
 
 
 @bot_routine(15, delay=False)
@@ -29,8 +29,8 @@ def populate_users():
             is_owner = u['is_owner']
             # Create our custom unique user ID's (slackID + slackUserName)
             _id = s_name + s_id
-            db_merge_row(User(id=_id,
-                              slack_id=s_id,
-                              slack_name=s_name,
-                              is_admin=is_admin,
-                              is_owner=is_owner))
+            db_update_row(User(id=_id,
+                               slack_id=s_id,
+                               slack_name=s_name,
+                               is_admin=is_admin,
+                               is_owner=is_owner))
