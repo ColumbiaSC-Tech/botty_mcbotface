@@ -39,16 +39,35 @@ from botty_mcbotface.botty.db.models import *
 
 
 # *** Common DB Functions *** #
+def crud_session_table_rows(func):
+    def wrapper(*args, **kwargs):
+        print(*args)
+        try:
+            func(*args)
+            db.session().commit()
+            db.session().close()
+        except Exception as e:
+            db.session().rollback()
+            log.error('An error occurred while adding row: %s', e)
+    return wrapper
 
+
+@crud_session_table_rows
 def db_create_row(row):
-    try:
-        # sess = db.session()
-        db.session().add(row)
-        db.session().commit()
-        db.session().close()
-    except Exception as e:
-        db.session().rollback()
-        log.error('An error occurred while adding row: %s', e)
+    print('db_create_row')
+    # sess = db.session()
+    db.session().add(row)
+
+
+# def db_create_row(row):
+#     try:
+#         # sess = db.session()
+#         db.session().add(row)
+#         db.session().commit()
+#         db.session().close()
+#     except Exception as e:
+#         db.session().rollback()
+#         log.error('An error occurred while adding row: %s', e)
 
 
 def db_read_row(table, row):
