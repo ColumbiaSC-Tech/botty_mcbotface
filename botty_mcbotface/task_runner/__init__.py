@@ -27,7 +27,7 @@ class AsyncWorkThread(object):
         self.thread.start()
 
     @staticmethod
-    def run(task, delay, debug=False):
+    def run(task, delay=0, debug=False):
         """
         Set, start then close the async task event loop.
         :param task: Function to run as a scheduled task.
@@ -46,6 +46,7 @@ class AsyncWorkThread(object):
         loop = new_event_loop()
         set_event_loop(loop)
         loop.run_until_complete(task())
+        print('RAN::', delay, task)
         loop.close()
 
 
@@ -60,19 +61,13 @@ def stop_task_runner():
     scheduler.shutdown()
 
 
-def spawn_task_thread(routine, delay):
+def spawn_task_thread(routine):
     """
     Utility function for dynamically generating WorkerThread's for registered routines.
     :param routine: Name of routine module/function to generate a worker for.
-    :param delay: Optional delay for first run.
-    :return work.run: The `run` method for the newly created worker thread.
+    :return AsyncWorkThreadrun: The newly created worker thread.
     """
-    if delay > 0:
-        # Delay for first run
-        print('Delay for first run', delay)
-        AsyncWorkThread.run(routine, delay=delay)
-
-    return AsyncWorkThread(task=routine).run
+    return AsyncWorkThread(task=routine)
 
 
 def register_routine_cron(interval, routine):
@@ -83,11 +78,10 @@ def register_routine_cron(interval, routine):
     :param interval: A dictionary containing keyword arguments for APScheduler cron trigger.
     :return scheduler.add_job(*):
     """
-    print('REALLy?')
-    return scheduler.add_job(spawn_task_thread, 'cron', args=(routine, 0), **interval)
+    return scheduler.add_job(spawn_task_thread, 'cron', args=(routine,), **interval)
 
 
-def register_routine_interval(interval, routine, delay=0):
+def register_routine_interval(interval, routine):
     """
     Adds a new interval triggered routine to the scheduler. This can be done at any time before,
     during, or after the scheduler has started.
@@ -95,7 +89,7 @@ def register_routine_interval(interval, routine, delay=0):
     :param interval: The interval (seconds) at which to run the function.
     :return scheduler.add_job(*):
     """
-    return scheduler.add_job(spawn_task_thread, 'interval', args=(routine,), kwargs={'delay':delay}, seconds=interval)
+    return scheduler.add_job(spawn_task_thread, 'interval', args=(routine,), seconds=interval)
 
 
 def bot_routine(interval, cron=False, delay=0, run_once=False):
@@ -107,39 +101,39 @@ def bot_routine(interval, cron=False, delay=0, run_once=False):
         else:
             dict containing cron day/time params
     :param cron: Boolean indicating whether to run task as cron job or interval in seconds.
-    :param delay: Integer or None indicating whether to run task immediately or offset by interval.
+    :param delay: Integer indicating whether to run task immediately or offset by interval.
     :param run_once: Boolean indicating whether to run task once or as a routine.
     :return decorator:
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            print('delay', delay)
-            # wrap the function/task as coroutine
+
+            # Wrap the function/task as coroutine
             coro = coroutines.coroutine(lambda: func(*args, **kwargs))
 
             if run_once or delay:
                 assert cron is False, 'Cron jobs do not support delays'
 
-            if run_once and delay:
-                # return before routine is registered and run coro with a delay
-                return AsyncWorkThread.run(coro, delay=delay)
-
-            elif run_once:
-                # return before routine is registered
-                return AsyncWorkThread.run(coro)
-
-            elif delay:
-                return register_routine_interval(interval, coro, delay=delay)
-
-            if not delay and not cron:
-                # run once immediately before registering with interval
-                AsyncWorkThread.run(coro)
-
             if cron:
                 return register_routine_cron(interval, coro)
 
+            elif delay:
+                if run_once:
+                    return AsyncWorkThread(coro, delay=delay)
+
+                # Send coroutine with delay to run before registered
+                AsyncWorkThread(coro, delay=delay)
+
+            elif run_once:
+                # Return before routine is registered
+                return AsyncWorkThread(coro)
+
+            else:
+                # Run once immediately before registering with interval
+                AsyncWorkThread(coro)
+
             return register_routine_interval(interval, coro)
 
-        # invoke the wrapped function immediately
+        # Invoke the wrapped function immediately
         return wrapper()
     return decorator

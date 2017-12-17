@@ -40,6 +40,7 @@ from botty_mcbotface.botty.db.models import *
 
 # *** Common DB Functions *** #
 def crud_session_table_rows(func):
+    """Session based CRUD wrapper for managing table rows in db"""
     def wrapper(*args, **kwargs):
         print(*args)
         try:

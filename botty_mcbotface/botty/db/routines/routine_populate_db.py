@@ -4,7 +4,7 @@ from botty_mcbotface.botty.db import db_update_row, Channel, User
 from botty_mcbotface.task_runner import bot_routine
 
 
-@bot_routine(150, delay=15)
+@bot_routine(30, delay=15)
 def populate_channels():
     """Retrieves all public channels for a Slack team and merges new members to Channels table."""
     log.info('populate_channels')
@@ -15,7 +15,7 @@ def populate_channels():
             db_update_row(Channel(id=c['id'], name=c['name']))
 
 
-@bot_routine(150, delay=30)
+@bot_routine(45, delay=30)
 def populate_users():
     """Retrieves all users for a Slack team and merges new members to Users table."""
     log.info('populate_users')
