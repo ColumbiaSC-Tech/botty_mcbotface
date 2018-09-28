@@ -2,7 +2,7 @@ from botty_mcbotface.utils.tools import get_html
 from six.moves.urllib.parse import unquote
 from slackbot.bot import listen_to, re
 import urllib.parse
-from pprint import pprint
+
 google_base_url = 'https://www.google.com/search?q='
 youtube_base_url = 'https://www.youtube.com/results?search_query='
 

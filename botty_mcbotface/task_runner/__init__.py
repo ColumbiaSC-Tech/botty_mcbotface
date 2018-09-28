@@ -7,8 +7,6 @@ from time import sleep
 # Main scheduler instantiation
 scheduler = BackgroundScheduler(daemon=False, timezone=bot_tz)
 
-# FIXME: Delay is fucked
-
 
 class AsyncWorkThread(object):
     """
@@ -18,6 +16,7 @@ class AsyncWorkThread(object):
     This thread has only one job, to run the given task. It is
     then managed by APScheduler parent thread (BackgroundScheduler).
     """
+
     def __init__(self, task, delay=0, daemon=False):
         """
         :param task: Properly formatted routine to run async in thread.
@@ -35,8 +34,6 @@ class AsyncWorkThread(object):
         :param delay: Optional delay in seconds before running task.
         :param debug: Optional debug logging.
         """
-        print('in run', delay)
-
         if delay > 0:
             sleep(delay)
 
@@ -47,7 +44,7 @@ class AsyncWorkThread(object):
         loop = new_event_loop()
         set_event_loop(loop)
         loop.run_until_complete(task())
-        print('RAN::', delay, task)
+        log.info('RAN::', delay, task)
         loop.close()
 
 
@@ -106,6 +103,7 @@ def bot_routine(interval, cron=False, delay=0, run_once=False):
     :param run_once: Boolean indicating whether to run task once or as a routine.
     :return decorator:
     """
+
     def decorator(func):
         def wrapper(*args, **kwargs):
 
@@ -137,4 +135,5 @@ def bot_routine(interval, cron=False, delay=0, run_once=False):
 
         # Invoke the wrapped function immediately
         return wrapper()
+
     return decorator
