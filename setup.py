@@ -23,7 +23,7 @@ setup(name='botty_mcbotface',
           'Development Status :: 3 - Alpha',
           'Intended Audience :: Developers',
           'License :: OSI Approved :: MIT License',
-          'Programming Language :: Python :: 3.5',
+          'Programming Language :: Python :: 3.7',
       ],
       install_requires=[
           'apscheduler',
@@ -51,5 +51,5 @@ setup(name='botty_mcbotface',
       package_data={
           '': ['*.json', '*.rst', '*.txt'],
       },
-      python_requires='>=3.5',
+      python_requires='>=3.7',
       zip_safe=False)

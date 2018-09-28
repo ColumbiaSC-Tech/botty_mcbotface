@@ -9,6 +9,7 @@ scheduler = BackgroundScheduler(daemon=False, timezone=bot_tz)
 
 # FIXME: Delay is fucked
 
+
 class AsyncWorkThread(object):
     """
     Custom Thread class that accepts functions to run async in
