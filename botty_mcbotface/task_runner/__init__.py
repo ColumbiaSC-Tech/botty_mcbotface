@@ -129,6 +129,7 @@ def bot_routine(interval, cron=False, delay=0, run_once=False):
 
                 # Send coroutine with delay to run before registered
                 AsyncWorkThread(coro, delay=delay)
+
                 return threading.Timer(delay, lambda: register_routine_interval(interval, coro) and None).start()
 
             elif run_once:
