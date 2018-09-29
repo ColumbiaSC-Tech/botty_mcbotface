@@ -4,6 +4,7 @@ run.py
 run_test.py
 slackbot_settings.py
 slackbot_test_settings.py
+google_calendar_creds.json
 botty_db
 
 # Byte-compiled / optimized / DLL files
