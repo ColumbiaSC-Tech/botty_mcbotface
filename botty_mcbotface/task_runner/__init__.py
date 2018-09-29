@@ -44,7 +44,7 @@ class AsyncWorkThread(object):
         loop = new_event_loop()
         set_event_loop(loop)
         loop.run_until_complete(task())
-        log.info('RAN::', delay, task)
+        # log.info('RAN::', delay, task)
         loop.close()
 
 
