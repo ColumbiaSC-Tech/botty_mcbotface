@@ -56,7 +56,7 @@ def google_calendar(message, search):
     events_result = service.events().list(**calendar_args).execute()
     events = events_result.get('items', [])
 
-    all_events = [event for event in events if '2nd' in event['summary']]
+    all_events = [event for event in events]
 
     if not len(events):
         print('No upcoming events found.')

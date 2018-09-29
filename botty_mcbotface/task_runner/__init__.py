@@ -4,6 +4,8 @@ from asyncio import coroutines, new_event_loop, set_event_loop
 from botty_mcbotface import log, bot_tz
 from time import sleep
 
+CLEAR = False
+
 # Main scheduler instantiation
 scheduler = BackgroundScheduler(daemon=False, timezone=bot_tz)
 
@@ -34,13 +36,18 @@ class AsyncWorkThread(object):
         :param delay: Optional delay in seconds before running task.
         :param debug: Optional debug logging.
         """
+        global CLEAR
+
         if delay > 0:
+            print('DELAY::1::', delay)
             sleep(delay)
+            CLEAR = True
 
         if debug:
             for job in scheduler.get_jobs():
                 if hasattr(job, 'next_run_time'):
                     log.info(job.next_run_time)
+
         loop = new_event_loop()
         set_event_loop(loop)
         loop.run_until_complete(task())
@@ -122,6 +129,7 @@ def bot_routine(interval, cron=False, delay=0, run_once=False):
 
                 # Send coroutine with delay to run before registered
                 AsyncWorkThread(coro, delay=delay)
+                return threading.Timer(delay, lambda: register_routine_interval(interval, coro) and None).start()
 
             elif run_once:
                 # Return before routine is registered
