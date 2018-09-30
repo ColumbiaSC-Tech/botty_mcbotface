@@ -42,7 +42,7 @@ setup(
         'requests',
         'slackbot',
         'slacker',
-        'sqlalchemy'
+        'sqlalchemy',
         'tzlocal',
         'urllib3',
         'websocket-client'
