@@ -18,7 +18,6 @@ from slackbot_settings import GOOGLE_CALENDAR
 from slackbot.dispatcher import Message
 from slackbot.bot import listen_to, re
 from typing import List
-from pprint import pprint
 
 
 class BadRequest(Exception):
@@ -54,8 +53,8 @@ error_responses: List[str] = [
 def parse_date(date: str) -> str:
     """
     Helper for parsing ISO date string to more friendly form.
-    :param date:
-    :return:
+    :param date: ISO formatted date string.
+    :return: User friendly date string.
     """
     return datetime.datetime.fromisoformat(date).strftime(date_format)
 
@@ -74,12 +73,29 @@ def translate(search: str, n_events: int) -> int:
     elif re.match('next \d', s):
         try:
             n: int = int(s.split('next ')[1])
-            print('n::', n)
             return n_events if n > n_events else n
         except ValueError:
             raise BadRequest('Invalid request')
 
     raise BadRequest('Invalid request')
+
+
+def get_google_calendar_events() -> List[dict]:
+    """
+    Retrieves all available google calendar events.
+    :return: List of events.
+    """
+
+    # Authenticate and get calendar resource object
+    creds: account.Credentials = account.Credentials.from_service_account_file(credentials)
+    scoped_creds: account.Credentials = creds.with_scopes(scopes)
+    service: Resource = build('calendar', 'v3', credentials=scoped_creds, cache=MemoryCache())
+
+    # Call the Calendar API
+    calendar_args['timeMin']: str = datetime.datetime.utcnow().isoformat() + 'Z'
+    events_result: dict = service.events().list(**calendar_args).execute()
+
+    return events_result.get('items', [])
 
 
 @listen_to('^\.calendar (.*)', re.IGNORECASE)
@@ -91,30 +107,23 @@ def google_calendar(message: Message, search: str):
     :return: Message to slack channel
     """
 
-    # Authenticate and get calendar resource object
-    creds: account.Credentials = account.Credentials.from_service_account_file(credentials)
-    scoped_creds: account.Credentials = creds.with_scopes(scopes)
-    service: Resource = build('calendar', 'v3', credentials=scoped_creds, cache=MemoryCache())
+    events: List[dict] = get_google_calendar_events()
+    e_len: int = len(events)
 
-    # Call the Calendar API
-    calendar_args['timeMin']: str = datetime.datetime.utcnow().isoformat() + 'Z'
-    events_result: dict = service.events().list(**calendar_args).execute()
-    events_items: List[dict] = events_result.get('items', [])
-
-    if not len(events_items):
-        print('No upcoming events found.')
+    if not e_len:
+        return message.send('No upcoming events found.')
 
     try:
-        n_events: int = translate(search, len(events_items))
-        iterable: enumerate = enumerate(events_items[:n_events], 1)
+        n_events: int = translate(search, e_len)
+        iterable: enumerate = enumerate(events[:n_events], 1)
 
         return list(starmap(lambda i, event:
                             message.send(
-                                '{}*Event:* {}\n*Starts:* {}\n *Event Link: *{}'.format(
-                                    f'{i}.\n' if n_events > 1 else '\n',
-                                    event['summary'],
-                                    parse_date(event['start']['dateTime']),
-                                    re.search('External URL: (.*)\n', event['description']).group(1)
+                                '{}*Name:* {}\n*When:* {}\n *Event Link: *{}'.format(
+                                    f'*Event {i}*\n' if n_events > 1 else '\n',
+                                    event.get('summary'),
+                                    parse_date(event.get('start').get('dateTime')),
+                                    re.search('External URL: (.*)\n', event.get('description')).group(1)
                                 )
                             ), iterable))
     except BadRequest:
