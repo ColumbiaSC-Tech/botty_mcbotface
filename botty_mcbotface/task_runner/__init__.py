@@ -3,8 +3,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from asyncio import coroutines, new_event_loop, set_event_loop
 from botty_mcbotface import log, bot_tz
 from time import sleep
-
-CLEAR = False
+from typing import Callable
 
 # Main scheduler instantiation
 scheduler = BackgroundScheduler(daemon=False, timezone=bot_tz)
@@ -19,7 +18,7 @@ class AsyncWorkThread(object):
     then managed by APScheduler parent thread (BackgroundScheduler).
     """
 
-    def __init__(self, task, delay=0, daemon=False):
+    def __init__(self, task: Callable, delay=0, daemon=False):
         """
         :param task: Properly formatted routine to run async in thread.
         :param daemon: Boolean indicating the worker thread is daemon or not.
@@ -29,19 +28,16 @@ class AsyncWorkThread(object):
         self.thread.start()
 
     @staticmethod
-    def run(task, delay=0, debug=False):
+    def run(task: Callable, delay=0, debug=False):
         """
         Set, start then close the async task event loop.
         :param task: Function to run as a scheduled task.
         :param delay: Optional delay in seconds before running task.
         :param debug: Optional debug logging.
         """
-        global CLEAR
 
         if delay > 0:
-            print('DELAY::1::', delay)
             sleep(delay)
-            CLEAR = True
 
         if debug:
             for job in scheduler.get_jobs():
@@ -66,7 +62,7 @@ def stop_task_runner():
     scheduler.shutdown()
 
 
-def spawn_task_thread(routine):
+def spawn_task_thread(routine: Callable):
     """
     Utility function for dynamically generating WorkerThread's for registered routines.
     :param routine: Name of routine module/function to generate a worker for.
@@ -75,18 +71,18 @@ def spawn_task_thread(routine):
     return AsyncWorkThread(task=routine)
 
 
-def register_routine_cron(interval, routine):
+def register_routine_cron(cron: dict, routine: Callable):
     """
     Adds a new cron triggered routine to the scheduler. This can be done at any time before, during,
     or after the scheduler has started.
     :param routine: Function to run at a given time interval.
-    :param interval: A dictionary containing keyword arguments for APScheduler cron trigger.
+    :param cron: A dictionary containing keyword arguments for APScheduler cron trigger.
     :return scheduler.add_job(*):
     """
-    return scheduler.add_job(spawn_task_thread, 'cron', args=(routine,), **interval)
+    return scheduler.add_job(spawn_task_thread, 'cron', args=(routine,), **cron)
 
 
-def register_routine_interval(interval, routine):
+def register_routine_interval(interval: int, routine: Callable):
     """
     Adds a new interval triggered routine to the scheduler. This can be done at any time before,
     during, or after the scheduler has started.
@@ -97,7 +93,7 @@ def register_routine_interval(interval, routine):
     return scheduler.add_job(spawn_task_thread, 'interval', args=(routine,), seconds=interval)
 
 
-def bot_routine(interval, cron=False, delay=0, run_once=False):
+def bot_routine(interval, cron=None, delay=0, run_once=False):
     """
     Function decorator to designate function as a task.
     :param interval: Interval
@@ -118,10 +114,10 @@ def bot_routine(interval, cron=False, delay=0, run_once=False):
             coro = coroutines.coroutine(lambda: func(*args, **kwargs))
 
             if run_once or delay:
-                assert cron is False, 'Cron jobs do not support delays'
+                assert not cron, 'Cron jobs do not support delays'
 
             if cron:
-                return register_routine_cron(interval, coro)
+                return register_routine_cron(cron, coro)
 
             elif delay:
                 if run_once:

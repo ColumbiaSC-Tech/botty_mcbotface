@@ -17,7 +17,7 @@ pre-written plugins to start with.
 1. Start a virtualenv in whatever directory you want to run botty,
     then cd into the project root and follow the remaining instructions
 
-2. In your new project directory, create a `slackbot_settings.py`:
+2. In your new project directory, create `slackbot_settings.py` from this template:
     ```
     API_TOKEN = 'your bot API token here'
     USER_TOKEN = 'your user API token here'
@@ -31,6 +31,9 @@ pre-written plugins to start with.
     # Exclude list for .seen command channel/message search
     SEEN_PLUGIN_CHANNEL_BLACKLIST = ['admin']
 
+    # Calendar ID (string) if you want to use .calendar command 
+    GOOGLE_CALENDAR_ID = None
+
     # Include all plugins like below, otherwise you can specify with multiple list items
     PLUGINS = [
         'botty_mcbotface.plugins'
@@ -40,7 +43,7 @@ pre-written plugins to start with.
 3. Create a `run.py` file, this is the main entry point:
     ```
     #!/usr/bin/env python
-    # V1.2.4
+    
     from slackbot.bot import Bot
     from botty_mcbotface import log
     from botty_mcbotface.task_runner import stop_task_runner
@@ -48,6 +51,7 @@ pre-written plugins to start with.
 
     def main():
         """Start slackbot"""
+        
         try:
             bot = Bot()
             bot.run()
@@ -60,11 +64,13 @@ pre-written plugins to start with.
         main()
     ```
 
-
 4. Run `pip install botty-mcbotface`
 
 5. Run `python run.py`:
 
+6. To see the list of stock plugins and their commands, while botty is 
+running in you Slack, type `.help` (make sure this is in a Slack channel 
+that botty is also invited).
 
 ## contributors
 
