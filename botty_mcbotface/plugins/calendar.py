@@ -16,10 +16,11 @@ from googleapiclient.discovery import build, Resource
 from google.oauth2 import service_account as account
 from itertools import starmap
 from run import bot
-from slackbot_settings import GOOGLE_CALENDAR_ID
+from slackbot_settings import GOOGLE_CALENDAR
 from slackbot.dispatcher import Message
 from slackbot.bot import listen_to, re, SlackClient
 from typing import List
+from pprint import pprint
 
 
 class BadRequest(Exception):
@@ -36,11 +37,13 @@ class MemoryCache(cache.Cache):
         MemoryCache._CACHE[url] = content
 
 
+calendar_cron: dict = GOOGLE_CALENDAR['cron']
+calendar_id: str = GOOGLE_CALENDAR['id']
 date_format: str = '%A %B %d, %Y @ %I:%M%p'
 credentials: str = 'google_calendar_creds.json'
 scopes: List[str] = ['https://www.googleapis.com/auth/calendar.readonly']
 calendar_args: dict = {
-    'calendarId': GOOGLE_CALENDAR_ID,
+    'calendarId': calendar_id,
     'maxResults': 100,
     'singleEvents': True,
     'orderBy': 'startTime'
@@ -108,7 +111,7 @@ def google_calendar(message: Message, search: str):
     :param search: User search string
     :return: Message to slack channel
     """
-    if not GOOGLE_CALENDAR_ID:
+    if not calendar_id:
         return message.reply(
             'It looks like this functionality has not yet been set up.\n' +
             'See the instructions here: https://github.com/ColumbiaSC-Tech/botty_mcbotface'
@@ -135,3 +138,16 @@ def google_calendar(message: Message, search: str):
                             ), iterable))
     except BadRequest:
         return message.reply(random_response(error_responses))
+
+
+client: SlackClient = bot._client
+
+client.rtm_send_message('random', 'Working!')
+# @bot_routine(None, cron=calendar_cron)
+# def google_calendar_event_cron():
+#     client: SlackClient = bot._client
+#
+#     print(client.get_channel('#random'))
+    # pprint(client.channels)
+
+    # client.rtm_send_message('C5G2L3F6H', 'Working!')

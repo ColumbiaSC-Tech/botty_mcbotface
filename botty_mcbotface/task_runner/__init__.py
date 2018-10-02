@@ -1,4 +1,5 @@
 import threading
+from apscheduler.schedulers.base import Job
 from apscheduler.schedulers.background import BackgroundScheduler
 from asyncio import coroutines, new_event_loop, set_event_loop
 from botty_mcbotface import log, bot_tz
@@ -62,16 +63,16 @@ def stop_task_runner():
     scheduler.shutdown()
 
 
-def spawn_task_thread(routine: Callable):
+def spawn_task_thread(routine: Callable) -> AsyncWorkThread:
     """
     Utility function for dynamically generating WorkerThread's for registered routines.
     :param routine: Name of routine module/function to generate a worker for.
-    :return AsyncWorkThreadrun: The newly created worker thread.
+    :return AsyncWorkThread: The newly created worker thread.
     """
     return AsyncWorkThread(task=routine)
 
 
-def register_routine_cron(cron: dict, routine: Callable):
+def register_routine_cron(cron: dict, routine: Callable) -> Job:
     """
     Adds a new cron triggered routine to the scheduler. This can be done at any time before, during,
     or after the scheduler has started.
@@ -79,10 +80,11 @@ def register_routine_cron(cron: dict, routine: Callable):
     :param cron: A dictionary containing keyword arguments for APScheduler cron trigger.
     :return scheduler.add_job(*):
     """
-    return scheduler.add_job(spawn_task_thread, 'cron', args=(routine,), **cron)
+    if cron['switch'] and cron['schedule']:
+        return scheduler.add_job(spawn_task_thread, 'cron', args=(routine,), **cron['schedule'])
 
 
-def register_routine_interval(interval: int, routine: Callable):
+def register_routine_interval(interval: int, routine: Callable) -> Job:
     """
     Adds a new interval triggered routine to the scheduler. This can be done at any time before,
     during, or after the scheduler has started.
@@ -93,7 +95,7 @@ def register_routine_interval(interval: int, routine: Callable):
     return scheduler.add_job(spawn_task_thread, 'interval', args=(routine,), seconds=interval)
 
 
-def bot_routine(interval, cron=None, delay=0, run_once=False):
+def bot_routine(interval, cron=None, delay=0, run_once=False) -> Callable:
     """
     Function decorator to designate function as a task.
     :param interval: Interval
