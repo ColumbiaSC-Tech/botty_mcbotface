@@ -35,11 +35,15 @@ pre-written plugins to start with.
     # You can also set up a cron job to check calendar at certain intervals for events and post.
     # To activate it set 'switch' to True and add apscheduler cron dict to 'schedule'.
     GOOGLE_CALENDAR = {
-        'id': None,
+        'id': 'pk2pnrh8sj16dr6cquv37mc7sk@group.calendar.google.com',
         'cron': {
-            'channel': 'channelName',
-            'switch': False,
-            'schedule': {}
+            'switch': True,
+            'log_channel': 'C5G2L3F6H',  # Optionally send message to this channel when no events found
+            'message_channel': 'C5G2L3F6H',  # Channel ID to message with event
+            'schedule': {
+                'second': '15'
+                # 'hour': '9'
+            }
         }
     }
 

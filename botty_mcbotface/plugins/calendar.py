@@ -9,18 +9,21 @@
 # 4. Find ID for your Google calendar and assign it to the GOOGLE_CALENDAR config variable in "slackbot_settings.py"
 
 import datetime
+from itertools import starmap
+from pprint import pprint
+from typing import List
+
 import googleapiclient.discovery_cache.base as cache
+from google.oauth2 import service_account as account
+from googleapiclient.discovery import build, Resource
+from slackbot.bot import listen_to, re, SlackClient
+from slackbot.dispatcher import Message
+
+from botty_mcbotface import log
 from botty_mcbotface.task_runner import bot_routine
 from botty_mcbotface.utils.tools import random_response
-from googleapiclient.discovery import build, Resource
-from google.oauth2 import service_account as account
-from itertools import starmap
 from run import bot
 from slackbot_settings import GOOGLE_CALENDAR
-from slackbot.dispatcher import Message
-from slackbot.bot import listen_to, re, SlackClient
-from typing import List
-from pprint import pprint
 
 
 class BadRequest(Exception):
@@ -38,6 +41,7 @@ class MemoryCache(cache.Cache):
 
 
 calendar_cron: dict = GOOGLE_CALENDAR['cron']
+calendar_log: str = calendar_cron['log_channel']
 calendar_id: str = GOOGLE_CALENDAR['id']
 date_format: str = '%A %B %d, %Y @ %I:%M%p'
 credentials: str = 'google_calendar_creds.json'
@@ -103,6 +107,23 @@ def get_google_calendar_events() -> List[dict]:
     return events_result.get('items', [])
 
 
+def format_event_message(event: dict, n_events: int) -> str:
+    """
+    Creates a human friendly formatted slack message for event data.
+    :param event:
+    :param n_events:
+    :return: Formatted string
+    """
+    return (
+        '{}*Name:* {}\n*When:* {}\n *Event Link: *{}'.format(
+            f'*Event {i}*\n' if n_events > 1 else '\n',
+            event.get('summary'),
+            parse_date(event.get('start').get('dateTime')),
+            re.search('External URL: (.*)\n', event.get('description')).group(1)
+        )
+    )
+
+
 @listen_to('^\.calendar (.*)', re.IGNORECASE)
 def google_calendar(message: Message, search: str):
     """
@@ -127,27 +148,27 @@ def google_calendar(message: Message, search: str):
         n_events: int = translate(search, e_len)
         iterable: enumerate = enumerate(events[:n_events], 1)
 
-        return list(starmap(lambda i, event:
-                            message.send(
-                                '{}*Name:* {}\n*When:* {}\n *Event Link: *{}'.format(
-                                    f'*Event {i}*\n' if n_events > 1 else '\n',
-                                    event.get('summary'),
-                                    parse_date(event.get('start').get('dateTime')),
-                                    re.search('External URL: (.*)\n', event.get('description')).group(1)
-                                )
-                            ), iterable))
+        return list(starmap(lambda i, event: message.send(format_event_message(event, n_events)), iterable))
     except BadRequest:
         return message.reply(random_response(error_responses))
 
 
-client: SlackClient = bot._client
+@bot_routine(None, cron=calendar_cron)
+def google_calendar_event_cron():
+    """
+    Checks google calendar for events and posts to channels.
+    :return:
+    """
+    client: SlackClient = bot._client
+    events: List[dict] = get_google_calendar_events()
 
-client.rtm_send_message('random', 'Working!')
-# @bot_routine(None, cron=calendar_cron)
-# def google_calendar_event_cron():
-#     client: SlackClient = bot._client
-#
-#     print(client.get_channel('#random'))
-    # pprint(client.channels)
+    e_len: int = len(events)
+    if not e_len:
 
-    # client.rtm_send_message('C5G2L3F6H', 'Working!')
+        msg: str = 'No events scheduled for today.'
+        if calendar_log:
+            return client.rtm_send_message(calendar_log, msg)
+
+        return log.info(msg)
+
+    return client.rtm_send_message(calendar_cron['message_channel'], format_event_message(events[0], 1))
