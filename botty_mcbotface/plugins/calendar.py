@@ -101,7 +101,7 @@ def get_google_calendar_events() -> List[dict]:
     service: Resource = build('calendar', 'v3', credentials=scoped_creds, cache=MemoryCache())
 
     # Call the Calendar API
-    calendar_args['timeMin']: str = datetime.datetime.utcnow().isoformat() + 'Z'
+    calendar_args['timeMin']: str = datetime.utcnow().isoformat() + 'Z'
     events_result: dict = service.events().list(**calendar_args).execute()
 
     return events_result.get('items', [])
