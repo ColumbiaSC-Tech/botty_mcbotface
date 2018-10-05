@@ -65,7 +65,7 @@ def parse_date(date: str) -> str:
     :param date: ISO formatted date string.
     :return: User friendly date string.
     """
-    return datetime.datetime.fromisoformat(date).strftime(date_format)
+    return datetime.fromisoformat(date).strftime(date_format)
 
 
 def translate(search: str, n_events: int) -> int:
