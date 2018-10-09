@@ -8,7 +8,7 @@
 # 3. Rename the credential file to "google_calendar_creds.json" and place it in the root directory.
 # 4. Find ID for your Google calendar and assign it to the GOOGLE_CALENDAR config variable in "slackbot_settings.py"
 
-import datetime
+from datetime import datetime
 from itertools import starmap
 from pprint import pprint
 from typing import List
@@ -65,7 +65,7 @@ def parse_date(date: str) -> str:
     :param date: ISO formatted date string.
     :return: User friendly date string.
     """
-    return datetime.datetime.fromisoformat(date).strftime(date_format)
+    return datetime.fromisoformat(date).strftime(date_format)
 
 
 def translate(search: str, n_events: int) -> int:
@@ -101,7 +101,7 @@ def get_google_calendar_events() -> List[dict]:
     service: Resource = build('calendar', 'v3', credentials=scoped_creds, cache=MemoryCache())
 
     # Call the Calendar API
-    calendar_args['timeMin']: str = datetime.datetime.utcnow().isoformat() + 'Z'
+    calendar_args['timeMin']: str = datetime.utcnow().isoformat() + 'Z'
     events_result: dict = service.events().list(**calendar_args).execute()
 
     return events_result.get('items', [])
@@ -162,8 +162,8 @@ def google_calendar_event_cron():
     client: SlackClient = bot._client
     events: List[dict] = get_google_calendar_events()
 
-    e_len: int = len(events)
-    if not e_len:
+    first_event: str = events[0]
+    if not datetime.fromisoformat(first_event).date() == datetime.today().date():
 
         msg: str = 'No events scheduled for today.'
         if calendar_log:
@@ -171,4 +171,4 @@ def google_calendar_event_cron():
 
         return log.info(msg)
 
-    return client.rtm_send_message(calendar_cron['message_channel'], format_event_message(events[0], 1))
+    return client.rtm_send_message(calendar_cron['message_channel'], format_event_message(first_event, 1))
