@@ -153,7 +153,7 @@ def google_calendar(message: Message, search: str):
         return message.reply(random_response(error_responses))
 
 
-@bot_routine(None, cron=calendar_cron)
+@bot_routine(None, cron=calendar_cron['schedule'])
 def google_calendar_event_cron():
     """
     Checks google calendar for events and posts to channels.
