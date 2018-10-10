@@ -153,7 +153,7 @@ def google_calendar(message: Message, search: str):
         return message.reply(random_response(error_responses))
 
 
-@bot_routine(None, cron=calendar_cron['schedule'])
+@bot_routine(None, cron=calendar_cron)
 def google_calendar_event_cron():
     """
     Checks google calendar for events and posts to channels.
@@ -161,14 +161,13 @@ def google_calendar_event_cron():
     """
     client: SlackClient = bot._client
     events: List[dict] = get_google_calendar_events()
+    e_len: int = len(events)
 
-    first_event: str = events[0]
-    if not datetime.fromisoformat(first_event).date() == datetime.today().date():
-
+    if not e_len or datetime.fromisoformat(events[0].get('start').get('dateTime')).date() != datetime.today().date():
         msg: str = 'No events scheduled for today.'
         if calendar_log:
             return client.rtm_send_message(calendar_log, msg)
 
         return log.info(msg)
 
-    return client.rtm_send_message(calendar_cron['message_channel'], format_event_message(first_event, 1))
+    return client.rtm_send_message(calendar_cron['message_channel'], format_event_message(events[0], 1))
