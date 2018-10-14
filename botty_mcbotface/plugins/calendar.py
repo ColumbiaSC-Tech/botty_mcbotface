@@ -10,7 +10,6 @@
 
 from datetime import datetime
 from itertools import starmap
-from pprint import pprint
 from typing import List
 
 import googleapiclient.discovery_cache.base as cache
@@ -22,7 +21,7 @@ from slackbot.dispatcher import Message
 from botty_mcbotface import log
 from botty_mcbotface.task_runner import bot_routine
 from botty_mcbotface.utils.tools import random_response
-from run import bot
+from slackbot_settings import API_TOKEN
 from slackbot_settings import GOOGLE_CALENDAR
 
 
@@ -159,7 +158,7 @@ def google_calendar_event_cron():
     Checks google calendar for events and posts to channels.
     :return:
     """
-    client: SlackClient = bot._client
+    client: SlackClient = SlackClient(API_TOKEN)
     events: List[dict] = get_google_calendar_events()
     e_len: int = len(events)
 
