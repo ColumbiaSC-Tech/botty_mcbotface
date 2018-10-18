@@ -106,11 +106,12 @@ def get_google_calendar_events() -> List[dict]:
     return events_result.get('items', [])
 
 
-def format_event_message(event: dict, n_events: int) -> str:
+def format_event_message(event: dict, n_events: int, i: int = 1) -> str:
     """
     Creates a human friendly formatted slack message for event data.
     :param event:
     :param n_events:
+    :param i:
     :return: Formatted string
     """
     return (
