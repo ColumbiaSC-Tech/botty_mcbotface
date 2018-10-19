@@ -148,7 +148,7 @@ def google_calendar(message: Message, search: str):
         n_events: int = translate(search, e_len)
         iterable: enumerate = enumerate(events[:n_events], 1)
 
-        return list(starmap(lambda i, event: message.send(format_event_message(event, n_events)), iterable))
+        return list(starmap(lambda i, event: message.send(format_event_message(event, n_events, i)), iterable))
     except BadRequest:
         return message.reply(random_response(error_responses))
 
