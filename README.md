@@ -18,7 +18,7 @@ pre-written plugins to start with.
     then cd into the project root and follow the remaining instructions
 
 2. In your new project directory, create `slackbot_settings.py` from this template:
-    ```
+    ```python
     API_TOKEN = 'your bot API token here'
     USER_TOKEN = 'your user API token here'
 
@@ -54,7 +54,7 @@ pre-written plugins to start with.
     ```
 
 3. Create a `run.py` file, this is the main entry point:
-    ```
+    ```python
     #!/usr/bin/env python
     
     from slackbot.bot import Bot
@@ -120,8 +120,7 @@ def daily():
 For cron routines the decorator uses the [apscheduler](https://pypi.org/project/APScheduler/) under the hood. 
 The cron dict it accepts is therefore the same. More info on defining cron jobs [here](https://apscheduler.readthedocs.io/en/v2.1.2/cronschedule.html).
 
-```
-
+```python
 @bot_routine(None, cron={'hour': '13'})
 def cron_routine():
     print('I run every day at 1pm.')
