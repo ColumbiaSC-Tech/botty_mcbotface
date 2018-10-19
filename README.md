@@ -1,6 +1,6 @@
 # botty_mcbotface setup
 
-## overview
+## Overview
 
 A [slackbot](https://github.com/lins05/slackbot) plugin that acts as a general purpose Slack bot.
 Although botty_mcbotface is not sentient, it does display a little sense of humor.
@@ -11,7 +11,7 @@ is essentially a plugin it as well as a sort of wrapper for with some extra
 built-in features like a taskrunner, database (SQLite3). and a host of
 pre-written plugins to start with.
 
-## installation
+## Installation
 *For more info on the setup for slackbot (number 2 & 3 below) you can read up [here](https://github.com/lins05/slackbot)*
 
 1. Start a virtualenv in whatever directory you want to run botty,
@@ -85,12 +85,54 @@ pre-written plugins to start with.
 running in you Slack, type `.help` (make sure this is in a Slack channel 
 that botty is also invited).
 
-## contributors
+## Routines
+
+You can create custom tasks/routines using the `@bot_routine` decorator.
+
+```python
+def bot_routine(interval, cron=None, delay=0, run_once=False) -> Callable:
+    """
+    Function decorator to designate function as a task.
+    :param interval: Interval
+        if cron=False:
+            seconds to run the task.
+        else:
+            dict containing cron day/time params
+    :param cron: Boolean indicating whether to run task as cron job or interval in seconds.
+    :param delay: Integer indicating whether to run task immediately or offset by interval.
+    :param run_once: Boolean indicating whether to run task once or as a routine.
+    :return decorator:
+    """
+```
+
+##### Examples:
+
+```python
+from botty_mcbotface.task_runner import bot_routine
+
+DAILY: int = 60 * 60 * 24
+
+@bot_routine(DAILY, delay=15)
+def daily():
+    print('I run once initially after a delay, then every 24 hours.')
+```
+
+For cron routines the decorator uses the [apscheduler](https://pypi.org/project/APScheduler/) under the hood. 
+The cron dict it accepts is therefore the same. More info on defining cron jobs [here](https://apscheduler.readthedocs.io/en/v2.1.2/cronschedule.html).
+
+```
+
+@bot_routine(None, cron={'hour': '13'})
+def cron_routine():
+    print('I run every day at 1pm.')
+```
+
+## Contributors
 
 [Danny Hinshaw](https://github.com/DannyHinshaw)
 
 [Benjamin Matthews](https://github.com/bmatt468)
 
-## license
+## License
 
 The MIT License (see [LICENSE](LICENSE))
