@@ -93,12 +93,8 @@ You can create custom tasks/routines using the `@bot_routine` decorator.
 def bot_routine(interval, cron=None, delay=0, run_once=False) -> Callable:
     """
     Function decorator to designate function as a task.
-    :param interval: Interval
-        if cron=False:
-            seconds to run the task.
-        else:
-            dict containing cron day/time params
-    :param cron: Boolean indicating whether to run task as cron job or interval in seconds.
+    :param interval: Interval in seconds between runing the task.
+    :param cron: Dict containing cron schedule configuration.
     :param delay: Integer indicating whether to run task immediately or offset by interval.
     :param run_once: Boolean indicating whether to run task once or as a routine.
     :return decorator:
