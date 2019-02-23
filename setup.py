@@ -11,7 +11,7 @@ def readme():
 
 setup(
     name='botty_mcbotface',
-    version='1.5.1',
+    version='1.5.2',
     description='General purpose Slack-bot with personality',
     long_description=readme(),
     url='https://github.com/ColumbiaSC-Tech/botty_mcbotface',
