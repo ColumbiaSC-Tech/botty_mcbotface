@@ -21,8 +21,7 @@ from slackbot.dispatcher import Message
 from botty_mcbotface import log
 from botty_mcbotface.task_runner import bot_routine
 from botty_mcbotface.utils.tools import random_response
-from slackbot_settings import API_TOKEN
-from slackbot_settings import GOOGLE_CALENDAR
+from slackbot_settings import API_TOKEN, GOOGLE_CALENDAR
 
 
 class BadRequest(Exception):
@@ -115,11 +114,11 @@ def format_event_message(event: dict, n_events: int, i: int = 1) -> str:
     :return: Formatted string
     """
     return (
-        '{}*Name:* {}\n*When:* {}\n *Event Link: *{}'.format(
+        "{}*Name:* {}\n*When:* {}\n *Event Link: *{}".format(
             f'*Event {i}*\n' if n_events > 1 else '\n',
             event.get('summary'),
             parse_date(event.get('start').get('dateTime')),
-            re.search('External URL: (.*)\n', event.get('description')).group(1)
+            re.search("(?P<url>https?://[^\s]+)", event.get('description')).group("url")
         )
     )
 
