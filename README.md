@@ -30,7 +30,7 @@ pre-written plugins to start with.
 
     # Exclude list for .seen command channel/message search
     SEEN_PLUGIN_CHANNEL_BLACKLIST = ['admin']
-
+    
     # Your Timezone (must be pytz `timezone` compatible string)
     TIMEZONE = "US/Eastern"
 
@@ -64,7 +64,9 @@ pre-written plugins to start with.
     from botty_mcbotface import log
     from botty_mcbotface.task_runner import stop_task_runner
 
-
+    bot = Bot()
+    
+    
     def main():
         """Start slackbot"""
         
