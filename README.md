@@ -30,6 +30,9 @@ pre-written plugins to start with.
 
     # Exclude list for .seen command channel/message search
     SEEN_PLUGIN_CHANNEL_BLACKLIST = ['admin']
+    
+    # Your Timezone (must be pytz `timezone` compatible string)
+    TIMEZONE = "US/Eastern"
 
     # If you want to set up the .calendar command you just need an ID.
     # You can also set up a cron job to check calendar at certain intervals for events and post.
