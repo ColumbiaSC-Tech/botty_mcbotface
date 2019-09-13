@@ -64,7 +64,9 @@ pre-written plugins to start with.
     from botty_mcbotface import log
     from botty_mcbotface.task_runner import stop_task_runner
 
-
+    bot = Bot()
+    
+    
     def main():
         """Start slackbot"""
         
