@@ -34,7 +34,7 @@ readme-renderer==22.0
 requests==2.20.0
 requests-mock==1.5.2
 requests-toolbelt==0.8.0
-rsa==4.0
+rsa==4.7
 six==1.11.0
 slackbot==0.5.3
 slacker==0.9.65
