@@ -44,6 +44,6 @@ tqdm==4.26.0
 twine==1.12.1
 tzlocal==1.5.1
 uritemplate==3.0.0
-urllib3==1.23
+urllib3==1.26.5
 webencodings==0.5.1
 websocket-client==0.44.0
