@@ -1,5 +1,5 @@
 APScheduler==3.5.3
-arrow==0.12.1
+arrow==0.15.1
 beautifulsoup4==4.6.3
 bleach==2.1.4
 bs4==0.0.1
